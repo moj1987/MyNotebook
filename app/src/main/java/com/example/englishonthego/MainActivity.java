@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import okhttp3.OkHttpClient;
@@ -19,40 +22,67 @@ public class MainActivity extends AppCompatActivity {
     final String happiBaseUrl = "https://api.happi.dev/";
     final String happi_dev_api_key = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
     private HappiApi happiApi;
-    private TextView textView;
+    private TextView testView;
+    private EditText searchTextInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = findViewById(R.id.testView);
+        testView = findViewById(R.id.testView);
+        searchTextInput = findViewById(R.id.search_text);
 
         initHappiRequest(happiBaseUrl);
+        configureListener();
+
 //        searchButtonClicked();
-        getSearch();
+//        getSearch();
+    }
+
+    private void configureListener() {
+//        configure search button
+        Button searchButton = findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSearch();
+            }
+        });
     }
 
     private void getSearch() {
-        Call<ResultResponse> call = happiApi.getSearch("wish you were here, pink floyd", happi_dev_api_key);
+
+        String searchText;
+        searchText = searchTextInput.getText().toString().trim();
+
+        testView.setText("");
+
+        Call<Feed> call = happiApi.getSearch(searchText, happi_dev_api_key);
 
         Log.d(TAG, "call url: " + call);
-        call.enqueue(new Callback<ResultResponse>() {
+        call.enqueue(new Callback<Feed>() {
             @Override
-            public void onResponse(Call<ResultResponse> call, Response<ResultResponse> response) {
-                if (!response.isSuccessful()) {
-                    textView.setText(response.code() + "");
+            public void onResponse(Call<Feed> call, Response<Feed> feed) {
+                if (!feed.isSuccessful()) {
+                    testView.setText(feed.code() + "");
                     return;
                 }
-                ResultResponse resultResponse = response.body();
+                Feed feeds = feed.body();
                 String content = "";
-                content += "" + resultResponse.getTrack() + "\n";
+                for (Responses response : feeds.getCallResult()) {
+                    content += "" + response.getTrackName()
+                            + ", " + response.getArtistName()
+                            + ", " + response.getAlbumName()
+                            + "\n\n";
+                }
 
-                textView.append(content);
+//                content += "" + feeds.getCallResult() + "\n";
+                testView.append(content);
             }
 
             @Override
-            public void onFailure(Call<ResultResponse> call, Throwable t) {
-                textView.setText(t.getMessage());
+            public void onFailure(Call<Feed> call, Throwable t) {
+                testView.setText(t.getMessage());
             }
         });
     }
