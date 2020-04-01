@@ -18,10 +18,12 @@ public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.
 
     private List<Responses> mResponses;
     private final Context context;
+    private OnItemClickListener mOnItemClickListener;
 
-    public LyricSearchAdapter(List<Responses> mResponses, Context context) {
+    public LyricSearchAdapter(List<Responses> mResponses, Context context, OnItemClickListener mOnItemClickListener) {
         this.mResponses = mResponses;
         this.context = context;
+        this.mOnItemClickListener = mOnItemClickListener;
     }
 
     @NonNull
@@ -29,7 +31,7 @@ public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.lyric_search_item, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mOnItemClickListener);
     }
 
     @Override
@@ -53,17 +55,26 @@ public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.
         this.mResponses = responses;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder    {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView trackName, artist, album;
+        OnItemClickListener onItemClickListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
             trackName = itemView.findViewById(R.id.track_name);
             artist = itemView.findViewById(R.id.artist);
             album = itemView.findViewById(R.id.album);
+            itemView.setOnClickListener(this);
+            this.onItemClickListener = onItemClickListener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            onItemClickListener.onItemClicked(getAdapterPosition());
         }
     }
-    public interface onItemClickListener {
- void onItemClicked(int position);
+
+    public interface OnItemClickListener {
+        void onItemClicked(int position);
     }
 }

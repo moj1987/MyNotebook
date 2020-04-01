@@ -1,16 +1,20 @@
 package com.example.englishonthego;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.englishonthego.databinding.ActivityMainBinding;
-import com.example.englishonthego.networking.Feed;
+import com.example.englishonthego.networking.SearchFeed;
 import com.example.englishonthego.networking.HappiApi;
 import com.example.englishonthego.networking.Responses;
 import com.example.englishonthego.ui.LyricSearchAdapter;
@@ -26,7 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements LyricSearchAdapter.onItemClickListener {
+public class MainActivity extends AppCompatActivity implements LyricSearchAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
     final String happiBaseUrl = "https://api.happi.dev/";
     final String happi_dev_api_key = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
@@ -55,11 +59,12 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     private void initRecyclerView() {
 
         recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new LyricSearchAdapter(responseData, this);
+        mAdapter = new LyricSearchAdapter(responseData, this, this);
         recyclerView.setAdapter(mAdapter);
 
 
@@ -71,9 +76,19 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         binding.searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeKeyboard();
                 getSearch();
             }
         });
+    }
+
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private void getSearch() {
@@ -81,26 +96,25 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         String searchText;
         searchText = binding.searchText.getText().toString().trim();
 
-        Call<Feed> call = happiApi.getSearch(searchText, happi_dev_api_key);
+        Call<SearchFeed> call = happiApi.getSearch(searchText, happi_dev_api_key);
 
         Log.d(TAG, "call url: " + call);
-        call.enqueue(new Callback<Feed>() {
+        call.enqueue(new Callback<SearchFeed>() {
             @Override
-            public void onResponse(Call<Feed> call, Response<Feed> feed) {
+            public void onResponse(Call<SearchFeed> call, Response<SearchFeed> feed) {
                 if (!feed.isSuccessful()) {
 
                     return;
                 }
-                Feed feeds = feed.body();
+                SearchFeed feeds = feed.body();
                 responseData = feeds.getCallResult();
                 mAdapter.setItems(responseData);
                 mAdapter.notifyDataSetChanged();
-                Log.i(TAG, "onResponse: " + responseData);
 
             }
 
             @Override
-            public void onFailure(Call<Feed> call, Throwable t) {
+            public void onFailure(Call<SearchFeed> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
@@ -132,7 +146,16 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     @Override
     public void onItemClicked(int position) {
         responseData.get(position);
-        Toast.makeText(this,"position "+responseData.get(position)+" was selected!", Toast.LENGTH_LONG).show();
+        getLyrics();
+
+        Intent intent = new Intent(this, LyricsViewerActivity.class);
+        startActivity(intent);
+
+        Toast.makeText(this, "position " + position + " was selected!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void getLyrics() {
+
     }
 }
 
