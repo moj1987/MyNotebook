@@ -1,4 +1,4 @@
-package com.example.englishonthego
+package com.example.englishonthego.networking
 
 data class LyricResponse(val id: Int,
                          val artist: String,

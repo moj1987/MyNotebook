@@ -1,13 +1,22 @@
 package com.example.englishonthego;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.englishonthego.databinding.ActivityMainBinding;
+import com.example.englishonthego.networking.Feed;
+import com.example.englishonthego.networking.HappiApi;
+import com.example.englishonthego.networking.Responses;
+import com.example.englishonthego.ui.LyricSearchAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -17,32 +26,49 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LyricSearchAdapter.onItemClickListener {
     private static final String TAG = "MainActivity";
     final String happiBaseUrl = "https://api.happi.dev/";
     final String happi_dev_api_key = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
     private HappiApi happiApi;
-    private TextView testView;
-    private EditText searchTextInput;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private ActivityMainBinding binding;
+    private LyricSearchAdapter mAdapter;
+    private List<Responses> responseData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        testView = findViewById(R.id.testView);
-        searchTextInput = findViewById(R.id.search_text);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
+        recyclerView = findViewById(R.id.recycler_view);
 
         initHappiRequest(happiBaseUrl);
         configureListener();
+        initRecyclerView();
 
-//        searchButtonClicked();
-//        getSearch();
+    }
+
+    private void initRecyclerView() {
+
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        mAdapter = new LyricSearchAdapter(responseData, this);
+        recyclerView.setAdapter(mAdapter);
+
+
     }
 
     private void configureListener() {
-//        configure search button
-        Button searchButton = findViewById(R.id.search_button);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+
+        //Configure search button
+        binding.searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getSearch();
@@ -53,9 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private void getSearch() {
 
         String searchText;
-        searchText = searchTextInput.getText().toString().trim();
-
-        testView.setText("");
+        searchText = binding.searchText.getText().toString().trim();
 
         Call<Feed> call = happiApi.getSearch(searchText, happi_dev_api_key);
 
@@ -64,25 +88,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> feed) {
                 if (!feed.isSuccessful()) {
-                    testView.setText(feed.code() + "");
+
                     return;
                 }
                 Feed feeds = feed.body();
-                String content = "";
-                for (Responses response : feeds.getCallResult()) {
-                    content += "" + response.getTrackName()
-                            + ", " + response.getArtistName()
-                            + ", " + response.getAlbumName()
-                            + "\n\n";
-                }
+                responseData = feeds.getCallResult();
+                mAdapter.setItems(responseData);
+                mAdapter.notifyDataSetChanged();
+                Log.i(TAG, "onResponse: " + responseData);
 
-//                content += "" + feeds.getCallResult() + "\n";
-                testView.append(content);
             }
 
             @Override
             public void onFailure(Call<Feed> call, Throwable t) {
-                testView.setText(t.getMessage());
+                Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -108,6 +127,12 @@ public class MainActivity extends AppCompatActivity {
                 .client(okHttpClient)
                 .build();
         happiApi = retrofit.create(HappiApi.class);
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        responseData.get(position);
+        Toast.makeText(this,"position "+responseData.get(position)+" was selected!", Toast.LENGTH_LONG).show();
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.englishonthego
+package com.example.englishonthego.networking
 
 import com.google.gson.annotations.SerializedName
 
