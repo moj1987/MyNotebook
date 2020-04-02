@@ -14,6 +14,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.englishonthego.databinding.ActivityMainBinding;
+import com.example.englishonthego.networking.Lyric;
+import com.example.englishonthego.networking.LyricFeed;
 import com.example.englishonthego.networking.SearchFeed;
 import com.example.englishonthego.networking.HappiApi;
 import com.example.englishonthego.networking.Responses;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     private ActivityMainBinding binding;
     private LyricSearchAdapter mAdapter;
     private List<Responses> responseData = new ArrayList<>();
+    private Lyric lyricData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     private void initRecyclerView() {
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -120,6 +123,28 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         });
     }
 
+    private void getLyrics(int idArtist, int idAlbum, int idTrack) {
+
+        Call<LyricFeed> call = happiApi.getLyric( idArtist, idAlbum, idTrack,happi_dev_api_key);
+        Log.d(TAG, "lyric call url: " + call);
+        call.enqueue(new Callback<LyricFeed>() {
+            @Override
+            public void onResponse(Call<LyricFeed> call, Response<LyricFeed> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                LyricFeed lyricFeed = response.body();
+                lyricData = lyricFeed.getLyricResult();
+                Log.d(TAG, "lyric: " + lyricData.getLyrics());
+            }
+
+            @Override
+            public void onFailure(Call<LyricFeed> call, Throwable t) {
+
+            }
+        });
+    }
+
     /**
      * initialize Happi api call with retrofit
      * and HttpLogging set up
@@ -145,17 +170,14 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
 
     @Override
     public void onItemClicked(int position) {
-        responseData.get(position);
-        getLyrics();
+        Responses currentLyricData = responseData.get(position);
+        getLyrics(currentLyricData.getArtistId(), currentLyricData.getAlbumId(),currentLyricData.getTrackId());
 
+//        this.getActionBar().setTitle(songName);
         Intent intent = new Intent(this, LyricsViewerActivity.class);
         startActivity(intent);
 
-        Toast.makeText(this, "position " + position + " was selected!", Toast.LENGTH_SHORT).show();
-    }
-
-    private void getLyrics() {
-
+        Toast.makeText(this, currentLyricData.getTrackName() + " was clicked", Toast.LENGTH_SHORT).show();
     }
 }
 

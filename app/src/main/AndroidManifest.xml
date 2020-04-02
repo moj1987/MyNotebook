@@ -14,6 +14,7 @@
         <activity
             android:name=".LyricsViewerActivity"
             android:label="@string/title_activity_lyrics_viewer"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
