@@ -1,5 +1,6 @@
 package com.example.englishonthego;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.englishonthego.databinding.ActivityMainBinding;
 import com.example.englishonthego.networking.Lyric;
 import com.example.englishonthego.networking.LyricFeed;
+import com.example.englishonthego.networking.RetrofitManager;
 import com.example.englishonthego.networking.SearchFeed;
 import com.example.englishonthego.networking.HappiApi;
 import com.example.englishonthego.networking.Responses;
@@ -24,25 +26,25 @@ import com.example.englishonthego.ui.LyricSearchAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements LyricSearchAdapter.OnItemClickListener {
-    private static final String TAG = "MainActivity";
-    final String happiBaseUrl = "https://api.happi.dev/";
+
+    //    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = "TESTTTTTT";
     final String happi_dev_api_key = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
+    String searchText;
+
+
     private HappiApi happiApi;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ActivityMainBinding binding;
     private LyricSearchAdapter mAdapter;
     private List<Responses> responseData = new ArrayList<>();
-    private Lyric lyricData;
+    private RetrofitManager retrofitManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +55,15 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
 
         recyclerView = findViewById(R.id.recycler_view);
 
-        initHappiRequest(happiBaseUrl);
+        retrofitManager = new RetrofitManager();
+        happiApi = retrofitManager.getHappiApi();
         configureListener();
         initRecyclerView();
-
     }
 
     private void initRecyclerView() {
-
         recyclerView.setHasFixedSize(true);
+
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         layoutManager = new LinearLayoutManager(this);
@@ -69,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
 
         mAdapter = new LyricSearchAdapter(responseData, this, this);
         recyclerView.setAdapter(mAdapter);
-
-
     }
 
     private void configureListener() {
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
             @Override
             public void onClick(View v) {
                 closeKeyboard();
-                getSearch();
+                getSearch(binding.searchText.getText().toString().trim());
             }
         });
     }
@@ -94,11 +94,7 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         }
     }
 
-    private void getSearch() {
-
-        String searchText;
-        searchText = binding.searchText.getText().toString().trim();
-
+    private void getSearch(String searchText) {
         Call<SearchFeed> call = happiApi.getSearch(searchText, happi_dev_api_key);
 
         Log.d(TAG, "call url: " + call);
@@ -113,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
                 responseData = feeds.getCallResult();
                 mAdapter.setItems(responseData);
                 mAdapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -123,58 +118,25 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         });
     }
 
-    private void getLyrics(int idArtist, int idAlbum, int idTrack) {
-
-        Call<LyricFeed> call = happiApi.getLyric( idArtist, idAlbum, idTrack,happi_dev_api_key);
-        Log.d(TAG, "lyric call url: " + call);
-        call.enqueue(new Callback<LyricFeed>() {
-            @Override
-            public void onResponse(Call<LyricFeed> call, Response<LyricFeed> response) {
-                if (!response.isSuccessful()) {
-                    return;
-                }
-                LyricFeed lyricFeed = response.body();
-                lyricData = lyricFeed.getLyricResult();
-                Log.d(TAG, "lyric: " + lyricData.getLyrics());
-            }
-
-            @Override
-            public void onFailure(Call<LyricFeed> call, Throwable t) {
-
-            }
-        });
-    }
-
-    /**
-     * initialize Happi api call with retrofit
-     * and HttpLogging set up
-     *
-     * @param baseUrl
-     */
-    private void initHappiRequest(String baseUrl) {
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-        happiApi = retrofit.create(HappiApi.class);
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onItemClicked(int position) {
         Responses currentLyricData = responseData.get(position);
-        getLyrics(currentLyricData.getArtistId(), currentLyricData.getAlbumId(),currentLyricData.getTrackId());
+        int artistId = currentLyricData.getArtistId();
+        int albumId = currentLyricData.getAlbumId();
+        int trackId = currentLyricData.getTrackId();
 
-//        this.getActionBar().setTitle(songName);
+        //TODO: change title ro ba yaru avaz konam: this.getActionBar().setTitle(songName);
         Intent intent = new Intent(this, LyricsViewerActivity.class);
+        intent.putExtra(LyricsViewerActivity.KEY_ARTIST_ID, artistId);
+        intent.putExtra(LyricsViewerActivity.KEY_ALBUM_ID, albumId);
+        intent.putExtra(LyricsViewerActivity.KEY_TRACK_ID, trackId);
+
+        Log.i(TAG, "onItemClicked: artistId: " + artistId + ", albumId: " + albumId + ", trackId: " + trackId);
         startActivity(intent);
 
         Toast.makeText(this, currentLyricData.getTrackName() + " was clicked", Toast.LENGTH_SHORT).show();
