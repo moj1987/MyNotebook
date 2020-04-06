@@ -23,13 +23,11 @@ import retrofit2.Response;
 
 public class LyricsViewerActivity extends AppCompatActivity {
 
-    //    private static final String TAG = LyricsViewerActivity.class.getSimpleName();
-    private static final String TAG = "TESTTTTTT";
+    private static final String TAG = LyricsViewerActivity.class.getSimpleName();
 
     public static final String KEY_ARTIST_ID = "com.example.englishonthego.LyricsViewerActivity.KEY_ARTIST_ID";
     public static final String KEY_ALBUM_ID = "com.example.englishonthego.LyricsViewerActivity.KEY_ALBUM_ID";
     public static final String KEY_TRACK_ID = "com.example.englishonthego.LyricsViewerActivity.KEY_TRACK_ID";
-
     private final String happi_dev_api_key = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
 
     private int artistId;
@@ -51,8 +49,9 @@ public class LyricsViewerActivity extends AppCompatActivity {
         textViewLyric = findViewById(R.id.lyric_text_view);
         toolbarLayout = findViewById(R.id.toolbar_layout);
 
-        artistId = getIntent().getIntExtra(KEY_ARTIST_ID, -1);
         setSupportActionBar(toolbar);
+
+        artistId = getIntent().getIntExtra(KEY_ARTIST_ID, -1);
         albumId = getIntent().getIntExtra(KEY_ALBUM_ID, -1);
         trackId = getIntent().getIntExtra(KEY_TRACK_ID, -1);
 
@@ -73,8 +72,6 @@ public class LyricsViewerActivity extends AppCompatActivity {
 
     private void getLyric() {
         Call<LyricFeed> call = happiApi.getLyric(artistId, albumId, trackId, happi_dev_api_key);
-        Log.d(TAG, "lyric call url: " + call);
-        Log.i(TAG, "Finding lyric for: artistId: " + artistId + ", albumId: " + albumId + ", trackId: " + trackId);
 
         call.enqueue(new Callback<LyricFeed>() {
             @Override

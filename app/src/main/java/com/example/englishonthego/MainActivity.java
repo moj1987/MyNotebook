@@ -31,8 +31,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements LyricSearchAdapter.OnItemClickListener {
 
-    //    private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String TAG = "TESTTTTTT";
+    private static final String TAG = MainActivity.class.getSimpleName();
     public static final String KEY_STATE = "com.example.englishonthego.MainActivity.KEY_STATE";
     final String happi_dev_api_key = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
     String searchText;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            Log.i(TAG, "Loaded instance text: " + savedInstanceState.getString(KEY_STATE));
+            binding.searchText.setText(savedInstanceState.getString(KEY_STATE));
         }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -66,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
 
     private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
-
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         layoutManager = new LinearLayoutManager(this);
@@ -77,17 +75,24 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     }
 
     private void configureListener() {
-
         //Configure search button
-        //When it is clicked, progress bar is shown and button will be invisible
         binding.searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // check if the same search is being requested
+                if (binding.searchText.getText().toString().trim().equals(searchText)) {
+                    Toast.makeText(getApplicationContext(), "You already have the result for this search", Toast.LENGTH_LONG).show();
+                    return;
+                } else {
+                    searchText = binding.searchText.getText().toString().trim();
+                }
+
+                //Hide search button and show progress bar
                 binding.searchButton.setVisibility(View.GONE);
                 binding.indeterminateProgressBar.setVisibility(View.VISIBLE);
 
                 closeKeyboard();
-                getLyricSearch(binding.searchText.getText().toString().trim());
+                getLyricSearch(searchText);
             }
         });
     }
@@ -102,15 +107,16 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     }
 
     private void getLyricSearch(String searchText) {
-
         Call<SearchFeed> call = happiApi.getSearch(searchText, happi_dev_api_key);
 
-        Log.d(TAG, "call url: " + call);
         call.enqueue(new Callback<SearchFeed>() {
             @Override
             public void onResponse(Call<SearchFeed> call, Response<SearchFeed> feed) {
                 if (!feed.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Sorry. Your search was not successful.", Toast.LENGTH_LONG).show();
 
+                    binding.indeterminateProgressBar.setVisibility(View.GONE);
+                    binding.searchButton.setVisibility(View.VISIBLE);
                     return;
                 }
                 SearchFeed feeds = feed.body();
@@ -133,16 +139,9 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         searchText = binding.searchText.getText().toString().trim();
-        Log.i(TAG, "on Save Instance State: " + searchText);
         outState.putString(KEY_STATE, searchText);
 
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.i(TAG, "on Restore Instance State: " + savedInstanceState.getString(KEY_STATE));
     }
 
     @Override
@@ -157,35 +156,7 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         intent.putExtra(LyricsViewerActivity.KEY_ALBUM_ID, albumId);
         intent.putExtra(LyricsViewerActivity.KEY_TRACK_ID, trackId);
 
-        Log.i(TAG, "onItemClicked: artistId: " + artistId + ", albumId: " + albumId + ", trackId: " + trackId);
         startActivity(intent);
-
-        Toast.makeText(this, currentLyricData.getTrackName() + " was clicked", Toast.LENGTH_SHORT).show();
     }
-
-//    public class MyParcelable implements Parcelable {
-//
-//        @Override
-//        public int describeContents() {
-//            return 0;
-//        }
-//
-//        @Override
-//        public void writeToParcel(Parcel out, int flags) {
-//            out.writeInt(mStateData);
-//        }
-//
-//        public static final Parcelable.Creator<MyParcelable> CREATOR
-//                = new Parcelable.Creator<MyParcelable>() {
-//            public MyParcelable createFromParcel(Parcel in) {
-//                return new MyParcelable(in);
-//            }
-//
-//            @Override
-//            public MyParcelable[] newArray(int size) {
-//                return new MyParcelable[size];
-//            }
-//        };
-//    }
 }
 
