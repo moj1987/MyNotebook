@@ -9,14 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.englishonthego.databinding.ActivityMainBinding;
-import com.example.englishonthego.networking.Lyric;
-import com.example.englishonthego.networking.LyricFeed;
 import com.example.englishonthego.networking.RetrofitManager;
 import com.example.englishonthego.networking.SearchFeed;
 import com.example.englishonthego.networking.HappiApi;
@@ -34,9 +33,9 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
 
     //    private static final String TAG = MainActivity.class.getSimpleName();
     private static final String TAG = "TESTTTTTT";
+    public static final String KEY_STATE = "com.example.englishonthego.MainActivity.KEY_STATE";
     final String happi_dev_api_key = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
     String searchText;
-
 
     private HappiApi happiApi;
     private RecyclerView recyclerView;
@@ -49,14 +48,18 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            Log.i(TAG, "Loaded instance text: " + savedInstanceState.getString(KEY_STATE));
+        }
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
         recyclerView = findViewById(R.id.recycler_view);
-
         retrofitManager = new RetrofitManager();
         happiApi = retrofitManager.getHappiApi();
+
         configureListener();
         initRecyclerView();
     }
@@ -76,11 +79,15 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     private void configureListener() {
 
         //Configure search button
+        //When it is clicked, progress bar is shown and button will be invisible
         binding.searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.searchButton.setVisibility(View.GONE);
+                binding.indeterminateProgressBar.setVisibility(View.VISIBLE);
+
                 closeKeyboard();
-                getSearch(binding.searchText.getText().toString().trim());
+                getLyricSearch(binding.searchText.getText().toString().trim());
             }
         });
     }
@@ -94,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         }
     }
 
-    private void getSearch(String searchText) {
+    private void getLyricSearch(String searchText) {
+
         Call<SearchFeed> call = happiApi.getSearch(searchText, happi_dev_api_key);
 
         Log.d(TAG, "call url: " + call);
@@ -107,6 +115,10 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
                 }
                 SearchFeed feeds = feed.body();
                 responseData = feeds.getCallResult();
+
+                binding.indeterminateProgressBar.setVisibility(View.GONE);
+                binding.searchButton.setVisibility(View.VISIBLE);
+
                 mAdapter.setItems(responseData);
                 mAdapter.notifyDataSetChanged();
             }
@@ -120,7 +132,17 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
+        searchText = binding.searchText.getText().toString().trim();
+        Log.i(TAG, "on Save Instance State: " + searchText);
+        outState.putString(KEY_STATE, searchText);
+
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i(TAG, "on Restore Instance State: " + savedInstanceState.getString(KEY_STATE));
     }
 
     @Override
@@ -130,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         int albumId = currentLyricData.getAlbumId();
         int trackId = currentLyricData.getTrackId();
 
-        //TODO: change title ro ba yaru avaz konam: this.getActionBar().setTitle(songName);
         Intent intent = new Intent(this, LyricsViewerActivity.class);
         intent.putExtra(LyricsViewerActivity.KEY_ARTIST_ID, artistId);
         intent.putExtra(LyricsViewerActivity.KEY_ALBUM_ID, albumId);
@@ -141,5 +162,30 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
 
         Toast.makeText(this, currentLyricData.getTrackName() + " was clicked", Toast.LENGTH_SHORT).show();
     }
+
+//    public class MyParcelable implements Parcelable {
+//
+//        @Override
+//        public int describeContents() {
+//            return 0;
+//        }
+//
+//        @Override
+//        public void writeToParcel(Parcel out, int flags) {
+//            out.writeInt(mStateData);
+//        }
+//
+//        public static final Parcelable.Creator<MyParcelable> CREATOR
+//                = new Parcelable.Creator<MyParcelable>() {
+//            public MyParcelable createFromParcel(Parcel in) {
+//                return new MyParcelable(in);
+//            }
+//
+//            @Override
+//            public MyParcelable[] newArray(int size) {
+//                return new MyParcelable[size];
+//            }
+//        };
+//    }
 }
 

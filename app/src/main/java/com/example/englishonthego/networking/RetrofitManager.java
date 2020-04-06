@@ -6,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
-    final String happiBaseUrl = "https://api.happi.dev/";
+    private final String happiBaseUrl = "https://api.happi.dev/";
 
     private HappiApi happiApi = null;
 
