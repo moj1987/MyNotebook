@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +23,10 @@ import com.example.englishonthego.networking.RetrofitManager;
 import com.example.englishonthego.networking.SearchFeed;
 import com.example.englishonthego.networking.HappiApi;
 import com.example.englishonthego.networking.Responses;
+import com.example.englishonthego.ui.FragmentCatagoryAdapter;
 import com.example.englishonthego.ui.LyricSearchAdapter;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +50,20 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
     private List<Responses> responseData = new ArrayList<>();
     private RetrofitManager retrofitManager;
 
+
+    /**
+     * Fragment objects declaration
+     */
+    private ViewPager2 viewPager;
+    private FragmentStateAdapter fragmentStateAdapter;
+    String[] tabsName = {"Lyric search", "Personal dictionary"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             binding.searchText.setText(savedInstanceState.getString(KEY_STATE));
         }
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
@@ -59,8 +72,20 @@ public class MainActivity extends AppCompatActivity implements LyricSearchAdapte
         retrofitManager = new RetrofitManager();
         happiApi = retrofitManager.getHappiApi();
 
+        /**
+         * Fragment related instantiation
+         */
+        viewPager = findViewById(R.id.pager);
+        fragmentStateAdapter = new FragmentCatagoryAdapter(this);
+        viewPager.setAdapter(fragmentStateAdapter);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
+                tab.setText(tabsName[position]))
+                .attach();
+
+
         configureListener();
-        initRecyclerView();
+//        initRecyclerView();
     }
 
     private void initRecyclerView() {

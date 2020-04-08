@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 dependencies {
     // Retrofit & OkHttp
@@ -51,4 +55,8 @@ repositories {
 dependencies {
     implementation 'androidx.appcompat:appcompat:+'
     implementation 'com.google.android.material:material:+'
+}
+
+dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:+'
 }
