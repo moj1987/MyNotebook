@@ -19,12 +19,11 @@ public class FragmentCatagoryAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0:
-                return new LyricsFragment();
             case 1:
                 return new DictionaryFragment();
+            default:
+                return new LyricsFragment();
         }
-        return new LyricsFragment();
     }
 
     @Override
