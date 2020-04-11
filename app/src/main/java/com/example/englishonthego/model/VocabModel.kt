@@ -1,4 +1,7 @@
 package com.example.englishonthego.model
 
-class VocabModel {
+data class VocabModel(
+        val vocab: String,
+        val definition: String,
+        val example: String) {
 }

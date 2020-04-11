@@ -72,11 +72,10 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
         searchTextInput = view.findViewById(R.id.search_text);
         searchButton = view.findViewById(R.id.search_button);
         indeterminateProgressBar = view.findViewById(R.id.indeterminateProgressBar);
-        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.lyrics_recycler_view);
 
         configureAdapters();
         configureListeners();
-        getLyricSearch("Hello, Adele");
 
         return view;
     }

@@ -5,22 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<androidx.recyclerview.widget.RecyclerView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:text="Dictionary"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_vocab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:layout_editor_absoluteX="318dp"
-        tools:layout_editor_absoluteY="635dp" />
-</FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dictionary_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Dictionary" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_vocab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:clickable="true"
+            app:srcCompat="@android:drawable/ic_input_add"
+            tools:layout_editor_absoluteX="318dp"
+            tools:layout_editor_absoluteY="635dp" />
+    </FrameLayout>
 </LinearLayout>
