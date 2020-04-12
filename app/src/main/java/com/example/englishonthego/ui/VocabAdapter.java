@@ -56,4 +56,9 @@ public class VocabAdapter extends RecyclerView.Adapter<VocabAdapter.VocabViewHol
             example = itemView.findViewById(R.id.item_example);
         }
     }
+
+    interface setOnVocabClickListener {
+         void onVocabClicked(int position);
+
+    }
 }

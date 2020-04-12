@@ -12,10 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".VocabEditorActivity"
+            android:label="@string/title_activity_vocab_editor"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".LyricsViewerActivity"
             android:label="@string/title_activity_lyrics_viewer"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
