@@ -24,7 +24,7 @@ public interface VocabDAO {
     void deleteVocab(VocabModel vocabModel);
 
     @Query("SELECT * FROM vocabsTable WHERE id=:id")
-    VocabModel getNoteByID(int id);
+    VocabModel getVocabByID(int id);
 
     @Query("SELECT * FROM vocabsTable ORDER BY vocab DESC")
     LiveData<List<VocabModel>> getAllVocab();

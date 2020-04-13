@@ -67,11 +67,6 @@ public class MainActivity extends AppCompatActivity  {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
                 tab.setText(tabsName[position]))
                 .attach();
-
-//        To Test
-//        to be deleted:
-        Intent intent = new Intent(getApplicationContext(), VocabEditorActivity.class);
-        startActivity(intent);
     }
 }
 

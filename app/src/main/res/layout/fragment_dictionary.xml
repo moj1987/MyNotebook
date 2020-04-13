@@ -17,13 +17,16 @@
             android:text="Dictionary" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_vocab"
+           android:id="@+id/add_new_vocab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
             android:clickable="true"
             app:srcCompat="@android:drawable/ic_input_add"
             tools:layout_editor_absoluteX="318dp"
             tools:layout_editor_absoluteY="635dp" />
+
+
     </FrameLayout>
 </LinearLayout>
