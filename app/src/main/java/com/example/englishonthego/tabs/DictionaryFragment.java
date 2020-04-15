@@ -92,10 +92,12 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
 
     @Override
     public void onVocabClicked(int position) {
+        /**
+         * open the clicked Vocab in VocabEditor activity and send the vocab ID
+         */
         Intent intent = new Intent(getActivity(), VocabEditorActivity.class);
-
-        //TODO: Getter does not work to get vocabData by ID.
-        intent.putExtra(VOCAB_ID_KEY, String.valueOf(vocabData.get(position)));
-
+        VocabModel currentVocab = vocabData.get(position);
+        intent.putExtra(VOCAB_ID_KEY, currentVocab.getId());
+        startActivity(intent);
     }
 }

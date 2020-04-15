@@ -1,7 +1,6 @@
 package com.example.englishonthego.ui;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import com.example.englishonthego.R;
 import com.example.englishonthego.model.VocabModel;
 
 import java.util.List;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class VocabAdapter extends RecyclerView.Adapter<VocabAdapter.VocabViewHolder> {
     private static final String TAG = "Vocab Adapter";

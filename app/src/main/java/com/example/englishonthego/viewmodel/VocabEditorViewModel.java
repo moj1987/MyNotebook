@@ -1,16 +1,14 @@
 package com.example.englishonthego.viewmodel;
 
 import android.app.Application;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.englishonthego.VocabEditorActivity;
 import com.example.englishonthego.database.AppRepository;
 import com.example.englishonthego.model.VocabModel;
 
@@ -22,7 +20,7 @@ public class VocabEditorViewModel extends AndroidViewModel {
     private static final String TAG = "testTTTT-EditorVM";
 
     private AppRepository mAppRepository;
-    private MutableLiveData<VocabModel> mLiveVocab = new MutableLiveData<>();
+    public MutableLiveData<VocabModel> mLiveVocab = new MutableLiveData<>();
     private Executor executor = Executors.newSingleThreadExecutor();
 
     public VocabEditorViewModel(@NonNull Application application) {
@@ -36,6 +34,7 @@ public class VocabEditorViewModel extends AndroidViewModel {
             @Override
             public void run() {
                 VocabModel vocab = mAppRepository.getVocabByID(vocabID);
+                mLiveVocab.postValue(vocab);
             }
         });
     }
@@ -62,4 +61,6 @@ public class VocabEditorViewModel extends AndroidViewModel {
     public void deleteVocab() {
         mAppRepository.deleteVocab(mLiveVocab.getValue());
     }
+
+
 }

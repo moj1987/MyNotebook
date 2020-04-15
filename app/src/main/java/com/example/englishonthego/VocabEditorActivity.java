@@ -2,6 +2,7 @@ package com.example.englishonthego;
 
 import android.os.Bundle;
 
+import com.example.englishonthego.model.VocabModel;
 import com.example.englishonthego.viewmodel.VocabEditorViewModel;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,8 @@ public class VocabEditorActivity extends AppCompatActivity {
     private static final String TAG = "testTTTTTTTTTTTTTTTTT";
 
     private EditText vocabText, definitionText, exampleText;
-    private Boolean isNewNote;
+    private Boolean isNewNote = false;
+    private Boolean isEditing = false;
     Button saveVocabToDictionary;
     private VocabEditorViewModel mViewModel;
 
@@ -63,6 +65,13 @@ public class VocabEditorActivity extends AppCompatActivity {
      */
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this).get(VocabEditorViewModel.class);
+        mViewModel.mLiveVocab.observe(this, vocabModel -> {
+            if (vocabModel != null) {
+                vocabText.setText(vocabModel.getVocab());
+                definitionText.setText(vocabModel.getDefinition());
+                exampleText.setText(vocabModel.getExample());
+            }
+        });
 
         /**
          * Check if new note.
@@ -73,7 +82,7 @@ public class VocabEditorActivity extends AppCompatActivity {
             setTitle("New");
             isNewNote = true;
         } else {
-            setTitle("Edit Vocab");
+            setTitle("Editing");
             int vocabID = extras.getInt(VOCAB_ID_KEY);
             mViewModel.loadVocab(vocabID);
         }
@@ -87,7 +96,6 @@ public class VocabEditorActivity extends AppCompatActivity {
         String definition = definitionText.getText().toString().trim();
         String example = exampleText.getText().toString().trim();
         mViewModel.saveVocab(vocab, definition, example);
-        Log.d(TAG, "came back from saveVocab in view model");
         finish();
     }
 
@@ -102,7 +110,7 @@ public class VocabEditorActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.action_delete){
+        if (item.getItemId() == R.id.action_delete) {
             deleteVocab();
         }
         return super.onOptionsItemSelected(item);

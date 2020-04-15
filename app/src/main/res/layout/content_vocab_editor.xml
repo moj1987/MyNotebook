@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
-        android:text="Add to dictionary" />
+        android:textAllCaps="false"
+        android:text="Save" />
 </LinearLayout>
 
