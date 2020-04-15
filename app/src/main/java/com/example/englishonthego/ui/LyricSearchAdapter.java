@@ -50,6 +50,7 @@ public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.
 
     /**
      * to set new data when data changes
+     * TODO: Not needed when using LiveData?
      */
     public void setItems(List<Responses> responses) {
         this.mResponses = responses;

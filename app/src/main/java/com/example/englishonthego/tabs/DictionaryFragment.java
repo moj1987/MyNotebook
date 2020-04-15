@@ -24,8 +24,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DictionaryFragment extends Fragment {
-//    private static final String TAG = "DictionaryFragment";
+import static com.example.englishonthego.utilities.Constants.VOCAB_ID_KEY;
+
+public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocabClickListener {
+    //    private static final String TAG = "DictionaryFragment";
     private static final String TAG = "tesTTTTTTTTTTTTTT";
 
     private List<VocabModel> vocabData = new ArrayList<>();
@@ -33,7 +35,7 @@ public class DictionaryFragment extends Fragment {
     private MainViewModel mainViewModel;
     private RecyclerView recyclerView;
 
-    private FloatingActionButton addNewVocab;
+    private FloatingActionButton fabAddNewVocab;
 
     public DictionaryFragment() {
     }
@@ -44,7 +46,7 @@ public class DictionaryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dictionary, container, false);
         recyclerView = view.findViewById(R.id.dictionary_recycler_view);
-        addNewVocab = view.findViewById(R.id.add_new_vocab);
+        fabAddNewVocab = view.findViewById(R.id.add_new_vocab);
 
         configureAdapters();
         initViewModel();
@@ -58,11 +60,11 @@ public class DictionaryFragment extends Fragment {
                 vocabModels -> {
                     vocabData.clear();
                     vocabData.addAll(vocabModels);
-                    Log.d(TAG, "initViewModel+data loaded: "+ vocabData.toString());
+                    Log.d(TAG, "initViewModel + data loaded: " + vocabData.toString());
 
                     if (vocabAdapter == null) {
 //                        vocabAdapter = new VocabAdapter(SampleVocab.INSTANCE.getAllVocab(), getActivity());
-                        vocabAdapter = new VocabAdapter(vocabData, getActivity());
+                        vocabAdapter = new VocabAdapter(vocabData, getActivity(), this);
                         recyclerView.setAdapter(vocabAdapter);
                     } else {
                         vocabAdapter.notifyDataSetChanged();
@@ -82,9 +84,18 @@ public class DictionaryFragment extends Fragment {
 
     private void configureListeners() {
 //        fab listener to call VocabEditor activity
-        addNewVocab.setOnClickListener(v -> {
+        fabAddNewVocab.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), VocabEditorActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    public void onVocabClicked(int position) {
+        Intent intent = new Intent(getActivity(), VocabEditorActivity.class);
+
+        //TODO: Getter does not work to get vocabData by ID.
+        intent.putExtra(VOCAB_ID_KEY, String.valueOf(vocabData.get(position)));
+
     }
 }

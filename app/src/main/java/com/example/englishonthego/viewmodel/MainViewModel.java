@@ -22,7 +22,6 @@ public class MainViewModel extends AndroidViewModel {
      */
     public LiveData<List<VocabModel>> mLiveVocab;
     private AppRepository mAppRepository;
-    private Executor executor = Executors.newSingleThreadExecutor();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -30,15 +29,7 @@ public class MainViewModel extends AndroidViewModel {
         mLiveVocab = mAppRepository.mVocabs;
     }
 
-    //  NOT wrapped in LiveData.
-    public void loadVocab(int vocabID) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                VocabModel vocab = mAppRepository.getVocabByID(vocabID);
-            }
-        });
-    }
+
 
 
 }

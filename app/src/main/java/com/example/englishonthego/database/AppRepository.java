@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.englishonthego.model.VocabModel;
 import com.example.englishonthego.networking.Lyric;
-import com.example.englishonthego.sampleData.SampleVocab;
+import com.example.englishonthego.utilities.SampleVocab;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -31,10 +31,10 @@ public class AppRepository {
 
     public AppRepository(Context context) {
         mDb = VocabDatabase.getInstance(context);
-        mVocabs= getAllVocabs();
+        mVocabs = getAllVocabs();
     }
 
-    public void addSampleVocab(){
+    public void addSampleVocab() {
         executor.execute(() -> mDb.vocabDAO().insertAllVocab(SampleVocab.INSTANCE.getAllVocab()));
     }
 
@@ -48,11 +48,10 @@ public class AppRepository {
     }
 
     public void insertVocab(VocabModel vocab) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                mDb.vocabDAO().insertVocab(vocab);
-            }
-        });
+        executor.execute(() -> mDb.vocabDAO().insertVocab(vocab));
+    }
+
+    public void deleteVocab(VocabModel vocab) {
+        executor.execute(() -> mDb.vocabDAO().deleteVocab(vocab));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.englishonthego.sampleData
+package com.example.englishonthego.utilities
 
 import com.example.englishonthego.model.VocabModel
 
