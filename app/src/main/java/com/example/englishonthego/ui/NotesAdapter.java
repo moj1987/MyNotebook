@@ -4,12 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.englishonthego.R;
 import com.example.englishonthego.model.NoteModel;
+import com.example.englishonthego.model.VocabModel;
 
 import java.util.List;
 
@@ -29,27 +31,31 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_note, parent, false);
-        return new NotesViewHolder(view,onNoteClickListener);
+        return new NotesViewHolder(view, onNoteClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
-
+        NoteModel currentNote = noteItems.get(position);
+        holder.noteTitle.setText(currentNote.getTitle());
+        holder.noteText.setText(currentNote.getText());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return noteItems.size();
     }
 
     public class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+        TextView noteTitle, noteText;
         OnNoteClickListener onNoteClickListener;
 
         public NotesViewHolder(@NonNull View itemView, OnNoteClickListener onNoteClickListener) {
             super(itemView);
+            noteTitle = itemView.findViewById(R.id.item_note_title);
+            noteText = itemView.findViewById(R.id.item_note_text);
 
-            this.onNoteClickListener=onNoteClickListener;
+            this.onNoteClickListener = onNoteClickListener;
             itemView.setOnClickListener(this);
         }
 
