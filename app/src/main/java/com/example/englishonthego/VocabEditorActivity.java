@@ -22,7 +22,7 @@ import static com.example.englishonthego.utilities.Constants.VOCAB_ID_KEY;
 
 public class VocabEditorActivity extends AppCompatActivity {
     //    private static final String TAG = "VocabEditorActivity";
-    private static final String TAG = "testTTTTTTTTTTTTTTTTT";
+    private static final String TAG = "test-VocabEditorActivity";
 
     private EditText vocabText, definitionText, exampleText;
     private Boolean isNewNote = false;

@@ -27,8 +27,7 @@ import java.util.List;
 import static com.example.englishonthego.utilities.Constants.VOCAB_ID_KEY;
 
 public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocabClickListener {
-    //    private static final String TAG = "DictionaryFragment";
-    private static final String TAG = "tesTTTTTTTTTTTTTT";
+    private static final String TAG = "DictionaryFragment";
 
     private List<VocabModel> vocabData = new ArrayList<>();
     private VocabAdapter vocabAdapter;
@@ -75,7 +74,9 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
     }
 
     private void configureAdapters() {
-//       configuring recyclerView Adapter for Dictionary Fragment
+        /**
+         *configuring recyclerView Adapter for Dictionary Fragment
+         */
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
@@ -83,7 +84,9 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
     }
 
     private void configureListeners() {
-//        fab listener to call VocabEditor activity
+        /**
+         *fab listener to call VocabEditor activity
+         */
         fabAddNewVocab.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), VocabEditorActivity.class);
             startActivity(intent);
@@ -93,7 +96,7 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
     @Override
     public void onVocabClicked(int position) {
         /**
-         * open the clicked Vocab in VocabEditor activity and send the vocab ID
+         * Show the clicked Vocab in VocabEditor activity
          */
         Intent intent = new Intent(getActivity(), VocabEditorActivity.class);
         VocabModel currentVocab = vocabData.get(position);

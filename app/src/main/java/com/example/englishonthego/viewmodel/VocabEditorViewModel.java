@@ -16,8 +16,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class VocabEditorViewModel extends AndroidViewModel {
-//    private static final String TAG = "VocabEditorViewModel";
-    private static final String TAG = "testTTTT-EditorVM";
+    private static final String TAG = "VocabEditorViewModel";
 
     private AppRepository mAppRepository;
     public MutableLiveData<VocabModel> mLiveVocab = new MutableLiveData<>();
@@ -49,9 +48,9 @@ public class VocabEditorViewModel extends AndroidViewModel {
             vocab = new VocabModel(vocabText, definitionText, exampleText);
             Log.d(TAG, "new Vocab created: " + vocab.toString());
         } else {
-//            TODO: 1. why the new word is saved even though it's not set?
-//             2. No setter for data class?
-//          vocab.
+            vocab.setVocab(vocabText);
+            vocab.setDefinition(definitionText);
+            vocab.setExample(exampleText);
             Log.d(TAG, "vocab replaced");
         }
         mAppRepository.insertVocab(vocab);
@@ -61,6 +60,4 @@ public class VocabEditorViewModel extends AndroidViewModel {
     public void deleteVocab() {
         mAppRepository.deleteVocab(mLiveVocab.getValue());
     }
-
-
 }

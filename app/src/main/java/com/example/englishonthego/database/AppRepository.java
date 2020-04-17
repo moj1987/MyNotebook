@@ -18,7 +18,7 @@ public class AppRepository {
     private static AppRepository ourInstance;
 
     public LiveData<List<VocabModel>> mVocabs;
-    private VocabDatabase mDb;
+    private AppDatabase mDb;
     private Executor executor = Executors.newSingleThreadExecutor();
 
 
@@ -30,7 +30,7 @@ public class AppRepository {
     }
 
     public AppRepository(Context context) {
-        mDb = VocabDatabase.getInstance(context);
+        mDb = AppDatabase.getInstance(context);
         mVocabs = getAllVocabs();
     }
 

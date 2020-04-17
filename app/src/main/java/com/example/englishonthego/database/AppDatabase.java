@@ -11,21 +11,21 @@ import com.example.englishonthego.model.VocabModel;
 
 @Database(entities = {VocabModel.class}, version = 1)
 @TypeConverters(DateConverter.class)
-public abstract class VocabDatabase extends RoomDatabase {
+public abstract class AppDatabase extends RoomDatabase {
     public static final String DATABASE_NAME = "VocabsDatabase.db";
-    private static volatile VocabDatabase instance;
+    private static volatile AppDatabase instance;
     private static final Object LOCK = new Object();
 
     public abstract VocabDAO vocabDAO();
 //    TODO: NotesDAO
 //    TODO: LyricsDAO
 
-    public static VocabDatabase getInstance(Context context) {
+    public static AppDatabase getInstance(Context context) {
         if (instance == null) {
             synchronized (LOCK) {
                 if (instance == null) {
                     instance = Room.databaseBuilder(context.getApplicationContext(),
-                            VocabDatabase.class, DATABASE_NAME).build();
+                            AppDatabase.class, DATABASE_NAME).build();
                 }
             }
         }

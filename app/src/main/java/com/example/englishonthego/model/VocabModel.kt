@@ -9,11 +9,10 @@ import java.util.*
 @Entity(tableName = "vocabsTable")
 data class VocabModel(
         @PrimaryKey(autoGenerate = true)
-        val id: Int?,
-        val vocab: String?,
-        val definition: String?,
-        val example: String?) {
-
-    constructor(vocab: String, definition: String, example: String) : this(vocab.toLowerCase(Locale.US).hashCode(), vocab, definition, example)
+        var id: Int = 0,
+        var vocab: String?,
+        var definition: String?,
+        var example: String?) {
+    constructor(vocab: String, definition: String, example: String) : this(0, vocab, definition, example)
 }
 
