@@ -2,7 +2,6 @@ package com.example.englishonthego.tabs;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,28 +49,20 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
         configureAdapters();
         initViewModel();
         configureListeners();
+
+        /**
+         * TODO: delete!!!!!!
+         */
+        testData();
+
         return view;
     }
 
-    //  initializing ViewModel
-    private void initViewModel() {
-        final Observer<List<VocabModel>> vocabObserver =
-                vocabModels -> {
-                    vocabData.clear();
-                    vocabData.addAll(vocabModels);
-                    Log.d(TAG, "initViewModel + data loaded: " + vocabData.toString());
-
-                    if (vocabAdapter == null) {
-//                        vocabAdapter = new VocabAdapter(SampleVocab.INSTANCE.getAllVocab(), getActivity());
-                        vocabAdapter = new VocabAdapter(vocabData, getActivity(), this);
-                        recyclerView.setAdapter(vocabAdapter);
-                    } else {
-                        vocabAdapter.notifyDataSetChanged();
-                    }
-                };
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        mainViewModel.mLiveVocab.observe(getViewLifecycleOwner(), vocabObserver);
+    private void testData() {
+        mainViewModel.deleteAllVocabs();
+        mainViewModel.addSampleVocabs();
     }
+
 
     private void configureAdapters() {
         /**
@@ -81,6 +72,24 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    //  initializing ViewModel
+    private void initViewModel() {
+        final Observer<List<VocabModel>> vocabObserver =
+                vocabModels -> {
+                    vocabData.clear();
+                    vocabData.addAll(vocabModels);
+
+                    if (vocabAdapter == null) {
+                        vocabAdapter = new VocabAdapter(vocabData, getActivity(), this);
+                        recyclerView.setAdapter(vocabAdapter);
+                    } else {
+                        vocabAdapter.notifyDataSetChanged();
+                    }
+                };
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mainViewModel.mLiveVocab.observe(getViewLifecycleOwner(), vocabObserver);
     }
 
     private void configureListeners() {

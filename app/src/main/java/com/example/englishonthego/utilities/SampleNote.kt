@@ -37,9 +37,9 @@ object SampleNote {
 
     fun getAllNotes(): List<NoteModel> {
         val list = arrayListOf<NoteModel>()
-        list.add(NoteModel(0, getDate(0), title1, text1))
-        list.add(NoteModel(1, getDate(-1), title2, text2))
-        list.add(NoteModel(2, getDate(1), title3, text3))
+        list.add(NoteModel(3, getDate(0), title1, text1))
+        list.add(NoteModel(2, getDate(10), title2, text2))
+        list.add(NoteModel(1, getDate(30), title3, text3))
         return list
     }
 

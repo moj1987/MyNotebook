@@ -4,6 +4,7 @@ import android.icu.text.Replaceable;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -20,4 +21,7 @@ public interface NoteDAO {
 
     @Query("SELECT * FROM notesTable ORDER BY date DESC")
     LiveData<List<NoteModel>> getAllNotes();
+
+    @Query("DELETE FROM notesTable")
+    int deleteAll();
 }

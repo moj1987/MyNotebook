@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.englishonthego.R;
 import com.example.englishonthego.model.NoteModel;
 import com.example.englishonthego.ui.NotesAdapter;
-import com.example.englishonthego.ui.VocabAdapter;
-import com.example.englishonthego.utilities.SampleNote;
-import com.example.englishonthego.utilities.SampleVocab;
+import com.example.englishonthego.viewmodel.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -25,7 +25,8 @@ public class NotesFragment extends Fragment implements NotesAdapter.OnNoteClickL
     RecyclerView recyclerView;
     FloatingActionButton fabAddNewNote;
     private NotesAdapter notesAdapter;
-    private List<NoteModel> notedData = new ArrayList<>();
+    private List<NoteModel> noteData = new ArrayList<>();
+    private MainViewModel mainViewModel;
 
 
     public NotesFragment() {
@@ -44,27 +45,44 @@ public class NotesFragment extends Fragment implements NotesAdapter.OnNoteClickL
         configureListeners();
 
         /**
-         * TODO: Delete!!
+         * TODO: DELETE!!!!!!
          */
-        notedData.addAll(SampleNote.INSTANCE.getAllNotes());
+        testData();
 
         return view;
     }
 
-    private void configureListeners() {
-
-    }
-
-    private void initViewModel() {
-
+    private void testData() {
+        mainViewModel.deleteAllNotes();
+        mainViewModel.addSampleNotes();
     }
 
     private void configureAdapters() {
         recyclerView.setHasFixedSize(true);
 
-        notesAdapter = new NotesAdapter(notedData, getActivity(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(notesAdapter);
+    }
+
+    private void initViewModel() {
+        final Observer<List<NoteModel>> noteObserver =
+                noteModels -> {
+                    noteData.clear();
+                    noteData.addAll(noteModels);
+
+                    if (notesAdapter == null) {
+                        notesAdapter = new NotesAdapter(noteData, getActivity(), this);
+                        recyclerView.setAdapter(notesAdapter);
+                    } else {
+                        notesAdapter.notifyDataSetChanged();
+                    }
+                };
+
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mainViewModel.mLiveNote.observe(getViewLifecycleOwner(), noteObserver);
+    }
+
+    private void configureListeners() {
     }
 
     @Override
