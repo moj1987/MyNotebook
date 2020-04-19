@@ -2,7 +2,6 @@ package com.example.englishonthego;
 
 import android.os.Bundle;
 
-import com.example.englishonthego.model.VocabModel;
 import com.example.englishonthego.viewmodel.VocabEditorViewModel;
 
 import androidx.annotation.NonNull;
@@ -10,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,9 +23,9 @@ public class VocabEditorActivity extends AppCompatActivity {
     private static final String TAG = "test-VocabEditorActivity";
 
     private EditText vocabText, definitionText, exampleText;
-    private Boolean isNewNote = false;
+    private Boolean isNewVocab = false;
     private Boolean isEditing = false;
-    Button saveVocabToDictionary;
+    private Button saveVocabToDictionary;
     private VocabEditorViewModel mViewModel;
 
     @Override
@@ -74,17 +72,16 @@ public class VocabEditorActivity extends AppCompatActivity {
         });
 
         /**
-         * Check if new note.
+         * Check if new vocab.
          * Set title accordingly
          */
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             setTitle("New");
-            isNewNote = true;
+            isNewVocab = true;
         } else {
             setTitle("Editing");
-            int vocabID = extras.getInt(VOCAB_ID_KEY);
-            mViewModel.loadVocab(vocabID);
+            mViewModel.loadVocab(extras.getInt(VOCAB_ID_KEY));
         }
     }
 
@@ -101,7 +98,7 @@ public class VocabEditorActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!isNewNote) {
+        if (!isNewVocab) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_vocab_editor, menu);
         }

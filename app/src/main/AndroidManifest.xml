@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".NoteEditorActivity"
+            android:label="@string/title_activity_note_editor"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".VocabEditorActivity"
             android:label="@string/title_activity_vocab_editor"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LyricsViewerActivity"
             android:label="@string/title_activity_lyrics_viewer"

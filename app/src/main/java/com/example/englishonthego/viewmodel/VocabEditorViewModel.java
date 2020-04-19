@@ -29,12 +29,9 @@ public class VocabEditorViewModel extends AndroidViewModel {
 
     //  NOT wrapped in LiveData. Hence executor.
     public void loadVocab(int vocabID) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                VocabModel vocab = mAppRepository.getVocabByID(vocabID);
-                mLiveVocab.postValue(vocab);
-            }
+        executor.execute(() -> {
+            VocabModel vocab = mAppRepository.getVocabByID(vocabID);
+            mLiveVocab.postValue(vocab);
         });
     }
 
@@ -42,19 +39,15 @@ public class VocabEditorViewModel extends AndroidViewModel {
         VocabModel vocab = mLiveVocab.getValue();
         if (vocab == null) {
             if (TextUtils.isEmpty(vocabText) | TextUtils.isEmpty(definitionText) | TextUtils.isEmpty(exampleText)) {
-                Log.d(TAG, "it was empty. Returning");
                 return;
             }
             vocab = new VocabModel(vocabText, definitionText, exampleText);
-            Log.d(TAG, "new Vocab created: " + vocab.toString());
         } else {
             vocab.setVocab(vocabText);
             vocab.setDefinition(definitionText);
             vocab.setExample(exampleText);
-            Log.d(TAG, "vocab replaced");
         }
         mAppRepository.insertVocab(vocab);
-        Log.d(TAG, "vocab inserted in database");
     }
 
     public void deleteVocab() {

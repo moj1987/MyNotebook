@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".VocabEditorActivity"
-    android:orientation="vertical"
     tools:showIn="@layout/activity_vocab_editor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/edit_vocab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Vocabulary"/>
+            android:hint="Vocabulary" />
 
         <EditText
             android:id="@+id/edit_definition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your definition"/>
+            android:hint="Your definition" />
 
         <EditText
             android:id="@+id/edit_example"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your example"/>
-
-    <Button
-        android:id="@+id/save_vocab_to_dictionary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:gravity="center"
-        android:textAllCaps="false"
-        android:text="Save" />
-</LinearLayout>
+            android:hint="Your example" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
 

@@ -17,11 +17,24 @@ import java.util.List;
 public interface NoteDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertNote(NoteModel noteModel);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllNotes(List<NoteModel> allSampleNotes);
+
+    @Delete
+    void deleteNote(NoteModel noteModel);
 
     @Query("SELECT * FROM notesTable ORDER BY date DESC")
     LiveData<List<NoteModel>> getAllNotes();
 
+    @Query("SELECT * FROM notesTable WHERE id=:id")
+    NoteModel getNotedByID(int id);
+
     @Query("DELETE FROM notesTable")
     int deleteAll();
+
+    @Query("SELECT COUNT(*) FROM notesTable")
+    int getCount();
+
 }
