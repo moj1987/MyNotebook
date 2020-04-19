@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">English on the go</string>
+    <string name="app_name">My notebook</string>
     <string name="title_activity_lyrics_viewer">LyricsViewerActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

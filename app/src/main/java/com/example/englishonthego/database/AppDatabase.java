@@ -10,9 +10,10 @@ import androidx.room.TypeConverters;
 import com.example.englishonthego.model.NoteModel;
 import com.example.englishonthego.model.VocabModel;
 
-@Database(entities = {VocabModel.class, NoteModel.class}, version = 1)
+@Database(entities = {VocabModel.class, NoteModel.class}, version = 1, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
+
     public static final String DATABASE_NAME = "AppDatabase.db";
     private static volatile AppDatabase instance;
     private static final Object LOCK = new Object();
