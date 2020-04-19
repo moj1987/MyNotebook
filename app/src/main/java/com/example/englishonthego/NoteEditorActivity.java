@@ -2,22 +2,30 @@ package com.example.englishonthego;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.englishonthego.model.NoteModel;
 import com.example.englishonthego.viewmodel.NoteEditorViewModel;
 
 import static com.example.englishonthego.utilities.Constants.NOTE_ID_KEY;
 
 public class NoteEditorActivity extends AppCompatActivity {
+    private static final String TAG = "NoteEditorActivity";
 
     EditText noteTitle, noteText;
     Button saveNote;
     Boolean isNewNote = false;
+
     private NoteEditorViewModel mViewModel;
 
     @Override
@@ -57,11 +65,33 @@ public class NoteEditorActivity extends AppCompatActivity {
             isNewNote = true;
             setTitle("New note");
         } else {
-            isNewNote = false;
             setTitle("Editing");
             mViewModel.loadNote(extras.getInt(NOTE_ID_KEY));
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!isNewNote) {
+            MenuInflater menuInflater = getMenuInflater();
+            menuInflater.inflate(R.menu.menu_note_editor, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_delete_note) {
+            deleteNote();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteNote() {
+        mViewModel.deleteNote();
+        finish();
     }
 
     private void configureListeners() {
@@ -74,7 +104,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     private void saveNoteAndReturn() {
         String title = noteTitle.getText().toString().trim();
         String note = noteText.getText().toString().trim();
-        mViewModel.saveNote(title,note);
+        mViewModel.saveNote(title, note);
         finish();
     }
 }

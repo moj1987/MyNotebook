@@ -28,16 +28,15 @@ public class MainViewModel extends AndroidViewModel {
         mLiveNote = mAppRepository.mNotes;
     }
 
-    public void addSampleVocabs() {
-        mAppRepository.addSampleVocab();
-    }
-
-    public void addSampleNotes() {
-        mAppRepository.addSampleNote();
-    }
+    public void addSampleVocabs() { mAppRepository.addSampleVocab(); }
 
     public void deleteAllVocabs() {
         mAppRepository.deleteAllVocab();
+    }
+
+
+    public void addSampleNotes() {
+        mAppRepository.addSampleNote();
     }
 
     public void deleteAllNotes() {

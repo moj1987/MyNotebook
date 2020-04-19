@@ -107,7 +107,7 @@ public class VocabEditorActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_delete) {
+        if (item.getItemId() == R.id.action_delete_vocab) {
             deleteVocab();
         }
         return super.onOptionsItemSelected(item);

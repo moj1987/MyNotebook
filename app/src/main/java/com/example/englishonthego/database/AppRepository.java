@@ -70,6 +70,8 @@ public class AppRepository {
 
     public void insertNote(NoteModel note) { executor.execute(() -> mDb.noteDAO().insertNote(note)); }
 
+    public void deleteNote(NoteModel note) {executor.execute(() -> mDb.noteDAO().deleteNote(note)); }
+
     public void deleteAllVocab() { executor.execute(() -> mDb.vocabDAO().deleteALL()); }
 
     public void addSampleNote() {
