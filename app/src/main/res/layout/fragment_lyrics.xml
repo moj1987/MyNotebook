@@ -9,33 +9,44 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/single_space"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/search_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Song, Artist" />
+            android:orientation="horizontal">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            <EditText
+                android:id="@+id/search_text"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="Song, Artist"
+                android:imeOptions="actionSearch"
+                android:inputType="text"/>
 
-            <ProgressBar
-                android:id="@+id/indeterminateProgressBar"
-                android:layout_width="92dp"
-                android:layout_height="45dp"
-                android:visibility="invisible"
-                tools:visibility="visible" />
-
-            <Button
-                android:id="@+id/search_button"
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Search"
-                android:textAllCaps="false" />
-        </FrameLayout>
+                android:layout_gravity="center">
+
+                <ProgressBar
+                    android:id="@+id/indeterminateProgressBar"
+                    android:layout_width="92dp"
+                    android:layout_height="45dp"
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/search_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Search"
+                    android:textAllCaps="false" />
+            </FrameLayout>
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lyrics_recycler_view"

@@ -21,5 +21,9 @@ data class Responses(
         val artistId: Int,
 
         @SerializedName("id_album")
-        val albumId: Int) {
+        val albumId: Int,
+
+        @SerializedName("haslyrics")
+        val hasLyric: Boolean
+) {
 }

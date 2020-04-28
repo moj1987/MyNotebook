@@ -1,4 +1,10 @@
 <resources>
+
+    <!-- General -->
+    <dimen name="half_space">4dp</dimen>
+    <dimen name="single_space">8dp</dimen>
+    <dimen name="double_space">16dp</dimen>
+
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
