@@ -67,7 +67,6 @@ public class NotesFragment extends Fragment implements NotesAdapter.OnNoteClickL
          *  Visual arrangements for items
          */
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
         /**
          * Set up RecyclerView

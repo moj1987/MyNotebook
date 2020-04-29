@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,13 +20,14 @@ import android.widget.EditText;
 
 import static com.mynotebook.englishonthego.utilities.Constants.VOCAB_ID_KEY;
 
-public class VocabEditorActivity extends AppCompatActivity {
+public class VocabEditorActivity extends AppCompatActivity implements TextWatcher {
 
     private EditText vocabText, definitionText, exampleText;
     private Boolean isNewVocab = false;
     private Boolean isEditing = false;
     private Button saveVocabToDictionary;
     private VocabEditorViewModel mViewModel;
+    private EditText[] editTextList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,12 @@ public class VocabEditorActivity extends AppCompatActivity {
         definitionText = findViewById(R.id.edit_definition);
         exampleText = findViewById(R.id.edit_example);
         saveVocabToDictionary = findViewById(R.id.save_vocab_to_dictionary);
+        editTextList = new EditText[]{vocabText, definitionText, exampleText};
+
+        saveVocabToDictionary.setEnabled(false);
+        vocabText.addTextChangedListener(this);
+        definitionText.addTextChangedListener(this);
+        exampleText.addTextChangedListener(this);
 
         setSupportActionBar(toolbar);
 
@@ -114,5 +123,27 @@ public class VocabEditorActivity extends AppCompatActivity {
     private void deleteVocab() {
         mViewModel.deleteVocab();
         finish();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        for (EditText editText : editTextList) {
+            if (editText.getText().toString().trim().length() <= 0) {
+                saveVocabToDictionary.setEnabled(false);
+                break;
+            }
+            saveVocabToDictionary.setEnabled(true);
+        }
+
     }
 }

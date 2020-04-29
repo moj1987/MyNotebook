@@ -62,7 +62,6 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
          *configuring recyclerView Adapter for Dictionary Fragment
          */
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
