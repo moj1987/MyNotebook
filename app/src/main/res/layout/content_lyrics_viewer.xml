@@ -8,10 +8,21 @@
     tools:context=".LyricsViewerActivity"
     tools:showIn="@layout/activity_lyrics_viewer">
 
-    <TextView
-        android:id="@+id/lyric_text_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/text_margin" />
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/indeterminateProgressBar"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/lyric_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/text_margin" />
+    </FrameLayout>
 
 </androidx.core.widget.NestedScrollView>

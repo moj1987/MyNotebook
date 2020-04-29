@@ -44,7 +44,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnItemClickListener {
-    private ActivityMainBinding binding;
     public static final String KEY_STATE = "com.mynotebook.englishonthego.MainActivity.KEY_STATE";
     final String HAPPI_DEV_API_KEY = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
 
@@ -86,7 +85,7 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
 
     private void configureAdapters() {
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -110,7 +109,7 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
         searchTextInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_SEARCH){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     performSearch();
                     return true;
                 }
@@ -119,6 +118,9 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
         });
     }
 
+    /**
+     * Checks input if not empty searches for lyric
+     */
     private void performSearch() {
         if (searchTextInput.getText().toString().trim().equals(searchText)) {
             return;
@@ -161,7 +163,7 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
                 /**
                  * Remove the items that do not have lyric
                  */
-                for (Iterator<Responses> iterator= responseData.iterator(); iterator.hasNext();) {
+                for (Iterator<Responses> iterator = responseData.iterator(); iterator.hasNext(); ) {
                     Responses currentData = iterator.next();
                     if (!currentData.getHasLyric()) {
                         iterator.remove();
@@ -194,11 +196,13 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
         int artistId = currentLyricData.getArtistId();
         int albumId = currentLyricData.getAlbumId();
         int trackId = currentLyricData.getTrackId();
+        String trackName = currentLyricData.getTrackName();
 
         Intent intent = new Intent(getContext(), LyricsViewerActivity.class);
         intent.putExtra(LyricsViewerActivity.KEY_ARTIST_ID, artistId);
         intent.putExtra(LyricsViewerActivity.KEY_ALBUM_ID, albumId);
         intent.putExtra(LyricsViewerActivity.KEY_TRACK_ID, trackId);
+        intent.putExtra(LyricsViewerActivity.KEY_TRACK_NAME, trackName);
 
         startActivity(intent);
     }

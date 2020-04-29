@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity  {
      */
     private ViewPager2 viewPager;
     private FragmentStateAdapter fragmentStateAdapter;
-    String[] tabsName = {"Lyric search", "my dictionary", "My notes"};
+    String[] tabsName = {"Lyric Search", "My Dictionary", "My Notes"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
