@@ -91,7 +91,7 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
 
     private void configureListeners() {
         /**
-         *fab listener to call VocabEditor activity to add a new vocab
+         * fab listener to call VocabEditor activity to add a new vocab
          */
         fabAddNewVocab.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), VocabEditorActivity.class);

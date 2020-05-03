@@ -8,7 +8,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/single_space">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/dictionary_recycler_view"
@@ -23,8 +24,8 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:clickable="true"
-            app:srcCompat="@android:drawable/ic_input_add"
             android:tint="@color/icons"
+            app:srcCompat="@android:drawable/ic_input_add"
             tools:layout_editor_absoluteX="318dp"
             tools:layout_editor_absoluteY="635dp" />
 

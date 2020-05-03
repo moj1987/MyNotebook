@@ -7,24 +7,27 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".NoteEditorActivity"
     tools:showIn="@layout/activity_note_editor">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <EditText
-        android:id="@+id/note_title"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:hint="Note title"
-        android:textAllCaps="false"/>
 
-    <EditText
-        android:id="@+id/note_text"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:hint="Note text"
-        android:textAllCaps="false"/>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/note_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:hint="Title"
+            android:textStyle="bold"
+            android:maxLines="1" />
+
+        <EditText
+            android:id="@+id/note_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:hint="Write here!"
+            android:textAllCaps="false" />
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

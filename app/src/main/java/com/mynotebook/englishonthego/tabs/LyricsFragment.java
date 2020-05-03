@@ -2,21 +2,15 @@ package com.mynotebook.englishonthego.tabs;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +19,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.mynotebook.englishonthego.LyricsViewerActivity;
 import com.mynotebook.englishonthego.R;
-import com.mynotebook.englishonthego.databinding.ActivityMainBinding;
 import com.mynotebook.englishonthego.networking.HappiApi;
-import com.mynotebook.englishonthego.networking.Responses;
+import com.mynotebook.englishonthego.networking.LyricModel;
 import com.mynotebook.englishonthego.networking.RetrofitManager;
 import com.mynotebook.englishonthego.networking.SearchFeed;
 import com.mynotebook.englishonthego.ui.LyricSearchAdapter;
@@ -45,9 +38,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.widget.Toast.LENGTH_LONG;
+
 public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnItemClickListener {
     public static final String KEY_STATE = "com.mynotebook.englishonthego.MainActivity.KEY_STATE";
-    final String HAPPI_DEV_API_KEY = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
 
     private String searchText;
     private EditText searchTextInput;
@@ -58,7 +52,7 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private LyricSearchAdapter mAdapter;
-    private List<Responses> responseData = new ArrayList<>();
+    private List<LyricModel> responseData = new ArrayList<>();
     private RetrofitManager retrofitManager;
 
     public LyricsFragment() {
@@ -103,31 +97,22 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
 
     private void configureListeners() {
         //Configure search button
-        searchButton.setOnClickListener(v -> {
-            performSearch();
-        });
+        searchButton.setOnClickListener(v -> performSearch());
 
         //Configure perform search when Enter clicked
-        searchTextInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    performSearch();
-                    return true;
-                }
-                return false;
+        searchTextInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                performSearch();
+                return true;
             }
+            return false;
         });
     }
 
     /**
-     * Checks input if not empty searches for lyric
+     * Checks input if not empty then searches for lyric
      */
     private void performSearch() {
-        if (searchTextInput.getText().toString().trim().equals(searchText)) {
-            return;
-        }
-
         if (searchTextInput.getText().toString().trim().isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Error")
@@ -138,24 +123,26 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
             return;
         }
 
-        searchText = searchTextInput.getText().toString().trim();
+        closeKeyboard();
 
         //Hide search button and show progress bar
-        searchButton.setVisibility(View.GONE);
+        searchButton.setVisibility(View.INVISIBLE);
         indeterminateProgressBar.setVisibility(View.VISIBLE);
 
-        closeKeyboard();
+        searchText = searchTextInput.getText().toString().trim();
+
         getLyricSearch(searchText);
     }
 
     private void getLyricSearch(String searchText) {
+        String HAPPI_DEV_API_KEY = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
         Call<SearchFeed> call = happiApi.getSearch(searchText, HAPPI_DEV_API_KEY);
 
         call.enqueue(new Callback<SearchFeed>() {
             @Override
             public void onResponse(Call<SearchFeed> call, Response<SearchFeed> feed) {
                 if (!feed.isSuccessful()) {
-                    indeterminateProgressBar.setVisibility(View.GONE);
+                    indeterminateProgressBar.setVisibility(View.INVISIBLE);
                     searchButton.setVisibility(View.VISIBLE);
                     return;
                 }
@@ -163,16 +150,27 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
                 responseData = feeds.getCallResult();
 
                 /**
+                 * Check if the response data is empty
+                 */
+                if (responseData.isEmpty()) {
+                    Snackbar.make(
+                            getActivity().findViewById(R.id.coordinator),
+                            "Sorry, nothing found",
+                            Snackbar.LENGTH_LONG)
+                            .show();
+                }
+
+                /**
                  * Remove the items that do not have lyric
                  */
-                for (Iterator<Responses> iterator = responseData.iterator(); iterator.hasNext(); ) {
-                    Responses currentData = iterator.next();
+                for (Iterator<LyricModel> iterator = responseData.iterator(); iterator.hasNext(); ) {
+                    LyricModel currentData = iterator.next();
                     if (!currentData.getHasLyric()) {
                         iterator.remove();
                     }
                 }
 
-                indeterminateProgressBar.setVisibility(View.GONE);
+                indeterminateProgressBar.setVisibility(View.INVISIBLE);
                 searchButton.setVisibility(View.VISIBLE);
 
                 mAdapter.setItems(responseData);
@@ -181,7 +179,9 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
 
             @Override
             public void onFailure(Call<SearchFeed> call, Throwable t) {
-                Toast.makeText(getContext(), t.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Network error, please try again later.", LENGTH_LONG).show();
+                indeterminateProgressBar.setVisibility(View.INVISIBLE);
+                searchButton.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -194,7 +194,7 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
 
     @Override
     public void onItemClicked(int position) {
-        Responses currentLyricData = responseData.get(position);
+        LyricModel currentLyricData = responseData.get(position);
         int artistId = currentLyricData.getArtistId();
         int albumId = currentLyricData.getAlbumId();
         int trackId = currentLyricData.getTrackId();
@@ -208,6 +208,4 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
 
         startActivity(intent);
     }
-
-
 }

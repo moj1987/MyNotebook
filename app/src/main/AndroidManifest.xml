@@ -14,10 +14,12 @@
         <activity
             android:name=".NoteEditorActivity"
             android:label="@string/title_activity_note_editor"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".VocabEditorActivity"
             android:label="@string/title_activity_vocab_editor"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LyricsViewerActivity"

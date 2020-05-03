@@ -10,18 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mynotebook.englishonthego.R;
-import com.mynotebook.englishonthego.networking.Responses;
+import com.mynotebook.englishonthego.networking.LyricModel;
 
 import java.util.List;
 
 public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.LyricSearchViewHolder> {
 
-    private List<Responses> mResponses;
+    private List<LyricModel> items;
     private final Context context;
     private OnItemClickListener mOnItemClickListener;
 
-    public LyricSearchAdapter(List<Responses> mResponses, Context context, OnItemClickListener mOnItemClickListener) {
-        this.mResponses = mResponses;
+    public LyricSearchAdapter(List<LyricModel> items, Context context, OnItemClickListener mOnItemClickListener) {
+        this.items = items;
         this.context = context;
         this.mOnItemClickListener = mOnItemClickListener;
     }
@@ -36,24 +36,34 @@ public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull LyricSearchViewHolder holder, int position) {
-        final Responses responses = mResponses.get(position);
-        holder.trackName.setText(responses.getTrackName());
-        holder.artist.setText(responses.getArtistName());
-        holder.album.setText(responses.getAlbumName());
+        final LyricModel lyricModel = items.get(position);
+        holder.trackName.setText(lyricModel.getTrackName());
+        holder.artist.setText(lyricModel.getArtistName());
+        holder.album.setText(lyricModel.getAlbumName());
 
     }
 
     @Override
     public int getItemCount() {
-        return mResponses.size();
+        return items.size();
     }
 
     /**
      * to set new data when data changes
      * TODO: Not needed when using LiveData?
      */
-    public void setItems(List<Responses> responses) {
-        this.mResponses = responses;
+    public void setItems(List<LyricModel> lyrics) {
+        this.items = lyrics;
+    }
+
+    public void addItemsToTop(List<LyricModel> lyricsToAdd) {
+        items.addAll(0, lyricsToAdd);
+        notifyDataSetChanged();
+    }
+
+    public void addItemsToBottom(List<LyricModel> lyricsToAdd) {
+        items.addAll(items.size() - 1, lyricsToAdd);
+        notifyDataSetChanged();
     }
 
     public class LyricSearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

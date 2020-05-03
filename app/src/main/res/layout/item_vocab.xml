@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/half_space"
-    android:elevation="@dimen/double_space"
+    android:elevation="@dimen/single_space"
     app:cardCornerRadius="@dimen/single_space">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/my_rect"
         android:orientation="vertical"
         android:padding="@dimen/single_space">
     <TextView

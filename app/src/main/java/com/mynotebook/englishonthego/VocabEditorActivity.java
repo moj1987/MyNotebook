@@ -1,23 +1,22 @@
 package com.mynotebook.englishonthego;
 
 import android.os.Bundle;
-
-import com.mynotebook.englishonthego.viewmodel.VocabEditorViewModel;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import com.mynotebook.englishonthego.viewmodel.VocabEditorViewModel;
 
+import static com.mynotebook.englishonthego.utilities.Constants.EDITING_KEY;
 import static com.mynotebook.englishonthego.utilities.Constants.VOCAB_ID_KEY;
 
 public class VocabEditorActivity extends AppCompatActivity implements TextWatcher {
@@ -25,7 +24,6 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
     private EditText vocabText, definitionText, exampleText;
     private Boolean isNewVocab = false;
     private Boolean isEditing = false;
-    private Button saveVocabToDictionary;
     private VocabEditorViewModel mViewModel;
     private EditText[] editTextList;
 
@@ -39,30 +37,22 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
         vocabText = findViewById(R.id.edit_vocab);
         definitionText = findViewById(R.id.edit_definition);
         exampleText = findViewById(R.id.edit_example);
-        saveVocabToDictionary = findViewById(R.id.save_vocab_to_dictionary);
         editTextList = new EditText[]{vocabText, definitionText, exampleText};
 
-        saveVocabToDictionary.setEnabled(false);
         vocabText.addTextChangedListener(this);
         definitionText.addTextChangedListener(this);
         exampleText.addTextChangedListener(this);
 
         setSupportActionBar(toolbar);
 
-        initViewModel();
-        configureListeners();
-    }
-
-    private void configureListeners() {
         /**
-         * Save button configuration
+         * Check if it is editing. Not let live data object publish it.
          */
-        saveVocabToDictionary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveVocabAndReturn();
-            }
-        });
+        if (savedInstanceState != null) {
+            isEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
+
+        initViewModel();
     }
 
     /**
@@ -71,7 +61,7 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this).get(VocabEditorViewModel.class);
         mViewModel.mLiveVocab.observe(this, vocabModel -> {
-            if (vocabModel != null) {
+            if (vocabModel != null && !isEditing) {
                 vocabText.setText(vocabModel.getVocab());
                 definitionText.setText(vocabModel.getDefinition());
                 exampleText.setText(vocabModel.getExample());
@@ -95,27 +85,42 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
     /**
      * Saves the new vocab or replaces the new information
      */
-    private void saveVocabAndReturn() {
+    private void saveVocab() {
         String vocab = vocabText.getText().toString().trim();
         String definition = definitionText.getText().toString().trim();
         String example = exampleText.getText().toString().trim();
         mViewModel.saveVocab(vocab, definition, example);
-        finish();
     }
 
+    /**
+     * create menu options in toolbar
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_vocab_editor, menu);
+
         if (!isNewVocab) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.menu_vocab_editor, menu);
+            MenuItem deleteItem = menu.findItem(R.id.action_delete_vocab);
+            deleteItem.setVisible(true);
         }
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Save or delete vocab when the corresponding icon is clicked
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_delete_vocab) {
-            deleteVocab();
+        switch (item.getItemId()) {
+            case R.id.action_delete_vocab:
+                deleteVocab();
+                finish();
+                break;
+            case R.id.action_save_vocab:
+                saveVocab();
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -137,13 +142,22 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
 
     @Override
     public void afterTextChanged(Editable s) {
+        /**
+         * Checks if all inputs have text then enables button
+         */
         for (EditText editText : editTextList) {
             if (editText.getText().toString().trim().length() <= 0) {
-                saveVocabToDictionary.setEnabled(false);
+//                saveVocabToDictionary.setEnabled(false);
                 break;
             }
-            saveVocabToDictionary.setEnabled(true);
+//                saveVocabToDictionary.setEnabled(true);
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean(EDITING_KEY, true);
+        super.onSaveInstanceState(outState);
     }
 }

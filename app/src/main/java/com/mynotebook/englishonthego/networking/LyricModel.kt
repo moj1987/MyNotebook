@@ -3,7 +3,7 @@ package com.mynotebook.englishonthego.networking
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class Responses(
+data class LyricModel(
         @SerializedName("track")
         @Expose
         val trackName: String,

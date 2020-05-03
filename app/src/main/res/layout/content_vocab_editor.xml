@@ -19,19 +19,27 @@
             android:id="@+id/edit_vocab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Vocabulary" />
+            android:layout_margin="@dimen/text_margin"
+            android:hint="Vocabulary"
+            android:inputType="text"
+            android:maxLength="50"
+            android:maxLines="1" />
 
         <EditText
             android:id="@+id/edit_definition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your definition" />
+            android:layout_margin="@dimen/text_margin"
+            android:hint="Your definition"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/edit_example"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your example" />
+            android:layout_margin="@dimen/text_margin"
+            android:hint="Your example"
+            android:inputType="text" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 

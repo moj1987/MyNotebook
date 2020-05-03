@@ -26,7 +26,7 @@ public interface VocabDAO {
     @Query("SELECT * FROM vocabsTable WHERE id=:id")
     VocabModel getVocabByID(int id);
 
-    @Query("SELECT * FROM vocabsTable ORDER BY vocab DESC")
+    @Query("SELECT * FROM vocabsTable ORDER BY vocab ASC")
     LiveData<List<VocabModel>> getAllVocab();
 
     @Query("DELETE FROM vocabsTable")
