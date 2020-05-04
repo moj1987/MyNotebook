@@ -24,6 +24,11 @@ data class LyricModel(
         val albumId: Int,
 
         @SerializedName("haslyrics")
-        val hasLyric: Boolean
+
+        val hasLyric: Boolean,
+
+        @SerializedName("cover")
+        val albumCoverUrl: String
+
 ) {
 }

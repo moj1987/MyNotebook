@@ -7,14 +7,13 @@ import com.mynotebook.englishonthego.networking.Lyric;
 import com.mynotebook.englishonthego.networking.LyricFeed;
 import com.mynotebook.englishonthego.networking.RetrofitManager;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,11 +29,13 @@ public class LyricsViewerActivity extends AppCompatActivity {
     public static final String KEY_ALBUM_ID = "com.mynotebook.englishonthego.LyricsViewerActivity.KEY_ALBUM_ID";
     public static final String KEY_TRACK_ID = "com.mynotebook.englishonthego.LyricsViewerActivity.KEY_TRACK_ID";
     public static final String KEY_TRACK_NAME = "com.mynotebook.englishonthego.LyricsViewerActivity.KEY_TRACK_NAME";
+    public static final String KEY_ALBUM_COVER_URL = "com.mynotebook.englishonthego.LyricsViewerActivity.KEY_ALBUM_COVER_URL";
     private final String happi_dev_api_key = "348763zJYkQkKjFckCf6KxwSvAGgcsAgbn6pr0dbEZLFBwv7MXfqclmC";
 
     private int artistId;
     private int albumId;
     private int trackId;
+    private String albumCoverUrl;
 
     private HappiApi happiApi;
     private RetrofitManager retrofitManager;
@@ -42,7 +43,8 @@ public class LyricsViewerActivity extends AppCompatActivity {
 
     private TextView textViewLyric;
     private CollapsingToolbarLayout toolbarLayout;
-    private ProgressBar intermitentProgressBar;
+    private ProgressBar intermittentProgressBar;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +53,25 @@ public class LyricsViewerActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         textViewLyric = findViewById(R.id.lyric_text_view);
         toolbarLayout = findViewById(R.id.toolbar_layout);
-        intermitentProgressBar = findViewById(R.id.indeterminateProgressBar);
+
+        imageView= findViewById(R.id.toolbar_img_album);
+
+
+
+        intermittentProgressBar = findViewById(R.id.indeterminateProgressBar);
+
+
 
         setSupportActionBar(toolbar);
 
         artistId = getIntent().getIntExtra(KEY_ARTIST_ID, -1);
         albumId = getIntent().getIntExtra(KEY_ALBUM_ID, -1);
         trackId = getIntent().getIntExtra(KEY_TRACK_ID, -1);
+        albumCoverUrl=getIntent().getStringExtra(KEY_ALBUM_COVER_URL);
+
 
         toolbarLayout.setTitle(getIntent().getStringExtra(KEY_TRACK_NAME));
+        Picasso.get().load(albumCoverUrl).into(imageView);
 
         retrofitManager = new RetrofitManager();
         happiApi = retrofitManager.getHappiApi();
@@ -69,7 +81,7 @@ public class LyricsViewerActivity extends AppCompatActivity {
 
     private void getLyric() {
         textViewLyric.setVisibility(View.INVISIBLE);
-        intermitentProgressBar.setVisibility(View.VISIBLE);
+        intermittentProgressBar.setVisibility(View.VISIBLE);
 
         Call<LyricFeed> call = happiApi.getLyric(artistId, albumId, trackId, happi_dev_api_key);
 
@@ -81,7 +93,7 @@ public class LyricsViewerActivity extends AppCompatActivity {
                 }
                 LyricFeed lyricFeed = response.body();
                 lyricData = lyricFeed.getLyricResult();
-                intermitentProgressBar.setVisibility(View.INVISIBLE);
+                intermittentProgressBar.setVisibility(View.INVISIBLE);
                 textViewLyric.setVisibility(View.VISIBLE);
                 textViewLyric.setText(lyricData.getLyrics());
             }

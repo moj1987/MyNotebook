@@ -199,12 +199,14 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
         int albumId = currentLyricData.getAlbumId();
         int trackId = currentLyricData.getTrackId();
         String trackName = currentLyricData.getTrackName();
+        String albumCoverUrl = currentLyricData.getAlbumCoverUrl();
 
         Intent intent = new Intent(getContext(), LyricsViewerActivity.class);
         intent.putExtra(LyricsViewerActivity.KEY_ARTIST_ID, artistId);
         intent.putExtra(LyricsViewerActivity.KEY_ALBUM_ID, albumId);
         intent.putExtra(LyricsViewerActivity.KEY_TRACK_ID, trackId);
         intent.putExtra(LyricsViewerActivity.KEY_TRACK_NAME, trackName);
+        intent.putExtra(LyricsViewerActivity.KEY_ALBUM_COVER_URL, albumCoverUrl);
 
         startActivity(intent);
     }
