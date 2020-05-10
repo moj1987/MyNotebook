@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.mynotebook.englishonthego.database.AppRepository;
+import com.mynotebook.englishonthego.model.LyricSaveModel;
 import com.mynotebook.englishonthego.model.NoteModel;
 import com.mynotebook.englishonthego.model.VocabModel;
 
@@ -18,6 +19,7 @@ public class MainViewModel extends AndroidViewModel {
      */
     public LiveData<List<VocabModel>> mLiveVocab;
     public LiveData<List<NoteModel>> mLiveNote;
+    public LiveData<List<LyricSaveModel>> mLiveLyrics;
 
     private AppRepository mAppRepository;
 
@@ -26,6 +28,7 @@ public class MainViewModel extends AndroidViewModel {
         mAppRepository = AppRepository.getInstance(application.getApplicationContext());
         mLiveVocab = mAppRepository.mVocabs;
         mLiveNote = mAppRepository.mNotes;
+        mLiveLyrics=mAppRepository.mLyrics;
     }
 
     public void addSampleVocabs() { mAppRepository.addSampleVocab(); }

@@ -9,16 +9,15 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mynotebook.englishonthego.NoteEditorActivity;
 import com.mynotebook.englishonthego.R;
 import com.mynotebook.englishonthego.model.NoteModel;
 import com.mynotebook.englishonthego.ui.NotesAdapter;
 import com.mynotebook.englishonthego.viewmodel.MainViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,12 +6,13 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.mynotebook.englishonthego.tabs.DictionaryFragment;
-import com.mynotebook.englishonthego.tabs.LyricsFragment;
+import com.mynotebook.englishonthego.tabs.LyricsSearchFragment;
+import com.mynotebook.englishonthego.tabs.LyricsViewerFragment;
 import com.mynotebook.englishonthego.tabs.NotesFragment;
 
 public class FragmentCategoryAdapter extends FragmentStateAdapter {
 
-    private static final int NUM_FRAGMENTS = 3;
+    private static final int NUM_FRAGMENTS = 4;
 
     public FragmentCategoryAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -22,11 +23,13 @@ public class FragmentCategoryAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 1:
-                return new DictionaryFragment();
+                return new LyricsViewerFragment();
             case 2:
+                return new DictionaryFragment();
+            case 3:
                 return new NotesFragment();
             default:
-                return new LyricsFragment();
+                return new LyricsSearchFragment();
         }
     }
 

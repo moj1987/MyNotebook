@@ -14,13 +14,13 @@ import com.mynotebook.englishonthego.networking.LyricSearchModel;
 
 import java.util.List;
 
-public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.LyricSearchViewHolder> {
+public class LyricAdapter extends RecyclerView.Adapter<LyricAdapter.LyricSearchViewHolder> {
 
     private List<LyricSearchModel> items;
     private final Context context;
     private OnItemClickListener mOnItemClickListener;
 
-    public LyricSearchAdapter(List<LyricSearchModel> items, Context context, OnItemClickListener mOnItemClickListener) {
+    public LyricAdapter(List<LyricSearchModel> items, Context context, OnItemClickListener mOnItemClickListener) {
         this.items = items;
         this.context = context;
         this.mOnItemClickListener = mOnItemClickListener;

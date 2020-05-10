@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -29,7 +28,7 @@ import com.mynotebook.englishonthego.networking.HappiApi;
 import com.mynotebook.englishonthego.networking.LyricSearchModel;
 import com.mynotebook.englishonthego.networking.RetrofitManager;
 import com.mynotebook.englishonthego.networking.SearchFeed;
-import com.mynotebook.englishonthego.ui.LyricSearchAdapter;
+import com.mynotebook.englishonthego.ui.LyricAdapter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,7 +40,7 @@ import retrofit2.Response;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnItemClickListener {
+public class LyricsSearchFragment extends Fragment implements LyricAdapter.OnItemClickListener {
     public static final String KEY_STATE = "com.mynotebook.englishonthego.MainActivity.KEY_STATE";
 
     private String searchText;
@@ -52,11 +51,11 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
     private HappiApi happiApi;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private LyricSearchAdapter mAdapter;
+    private LyricAdapter mAdapter;
     private List<LyricSearchModel> responseData = new ArrayList<>();
     private RetrofitManager retrofitManager;
 
-    public LyricsFragment() {
+    public LyricsSearchFragment() {
         // Required empty public constructor
     }
 
@@ -87,7 +86,7 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new LyricSearchAdapter(responseData, getActivity(), this);
+        mAdapter = new LyricAdapter(responseData, getActivity(), this);
         recyclerView.setAdapter(mAdapter);
     }
 

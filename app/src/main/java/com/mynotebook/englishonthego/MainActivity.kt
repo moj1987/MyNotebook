@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var tabsName = arrayOf("Lyric Search", "My Dictionary", "My Notes")
+    private var tabsName = arrayOf("Lyric Search", "Lyrics", "Dictionary", "Notes")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
