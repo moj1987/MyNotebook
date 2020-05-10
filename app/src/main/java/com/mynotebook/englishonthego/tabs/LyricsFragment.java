@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.mynotebook.englishonthego.LyricsViewerActivity;
 import com.mynotebook.englishonthego.R;
 import com.mynotebook.englishonthego.networking.HappiApi;
-import com.mynotebook.englishonthego.networking.LyricModel;
+import com.mynotebook.englishonthego.networking.LyricSearchModel;
 import com.mynotebook.englishonthego.networking.RetrofitManager;
 import com.mynotebook.englishonthego.networking.SearchFeed;
 import com.mynotebook.englishonthego.ui.LyricSearchAdapter;
@@ -45,14 +46,14 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
 
     private String searchText;
     private EditText searchTextInput;
-    private Button searchButton;
+    private ImageView searchButton;
     private ProgressBar indeterminateProgressBar;
 
     private HappiApi happiApi;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private LyricSearchAdapter mAdapter;
-    private List<LyricModel> responseData = new ArrayList<>();
+    private List<LyricSearchModel> responseData = new ArrayList<>();
     private RetrofitManager retrofitManager;
 
     public LyricsFragment() {
@@ -163,8 +164,8 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
                 /**
                  * Remove the items that do not have lyric
                  */
-                for (Iterator<LyricModel> iterator = responseData.iterator(); iterator.hasNext(); ) {
-                    LyricModel currentData = iterator.next();
+                for (Iterator<LyricSearchModel> iterator = responseData.iterator(); iterator.hasNext(); ) {
+                    LyricSearchModel currentData = iterator.next();
                     if (!currentData.getHasLyric()) {
                         iterator.remove();
                     }
@@ -194,7 +195,7 @@ public class LyricsFragment extends Fragment implements LyricSearchAdapter.OnIte
 
     @Override
     public void onItemClicked(int position) {
-        LyricModel currentLyricData = responseData.get(position);
+        LyricSearchModel currentLyricData = responseData.get(position);
         int artistId = currentLyricData.getArtistId();
         int albumId = currentLyricData.getAlbumId();
         int trackId = currentLyricData.getTrackId();

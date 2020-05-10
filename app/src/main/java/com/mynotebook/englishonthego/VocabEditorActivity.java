@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -44,6 +45,9 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
         exampleText.addTextChangedListener(this);
 
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         /**
          * Check if it is editing. Not let live data object publish it.
@@ -121,6 +125,9 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
                 saveVocab();
                 finish();
                 break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

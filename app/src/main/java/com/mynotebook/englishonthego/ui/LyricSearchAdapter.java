@@ -10,17 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mynotebook.englishonthego.R;
-import com.mynotebook.englishonthego.networking.LyricModel;
+import com.mynotebook.englishonthego.networking.LyricSearchModel;
 
 import java.util.List;
 
 public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.LyricSearchViewHolder> {
 
-    private List<LyricModel> items;
+    private List<LyricSearchModel> items;
     private final Context context;
     private OnItemClickListener mOnItemClickListener;
 
-    public LyricSearchAdapter(List<LyricModel> items, Context context, OnItemClickListener mOnItemClickListener) {
+    public LyricSearchAdapter(List<LyricSearchModel> items, Context context, OnItemClickListener mOnItemClickListener) {
         this.items = items;
         this.context = context;
         this.mOnItemClickListener = mOnItemClickListener;
@@ -36,10 +36,10 @@ public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull LyricSearchViewHolder holder, int position) {
-        final LyricModel lyricModel = items.get(position);
-        holder.trackName.setText(lyricModel.getTrackName());
-        holder.artist.setText(lyricModel.getArtistName());
-        holder.album.setText(lyricModel.getAlbumName());
+        final LyricSearchModel lyricSearchModel = items.get(position);
+        holder.trackName.setText(lyricSearchModel.getTrackName());
+        holder.artist.setText(lyricSearchModel.getArtistName());
+        holder.album.setText(lyricSearchModel.getAlbumName());
 
     }
 
@@ -52,16 +52,16 @@ public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.
      * to set new data when data changes
      * TODO: Not needed when using LiveData?
      */
-    public void setItems(List<LyricModel> lyrics) {
+    public void setItems(List<LyricSearchModel> lyrics) {
         this.items = lyrics;
     }
 
-    public void addItemsToTop(List<LyricModel> lyricsToAdd) {
+    public void addItemsToTop(List<LyricSearchModel> lyricsToAdd) {
         items.addAll(0, lyricsToAdd);
         notifyDataSetChanged();
     }
 
-    public void addItemsToBottom(List<LyricModel> lyricsToAdd) {
+    public void addItemsToBottom(List<LyricSearchModel> lyricsToAdd) {
         items.addAll(items.size() - 1, lyricsToAdd);
         notifyDataSetChanged();
     }

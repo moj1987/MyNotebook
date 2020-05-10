@@ -6,7 +6,7 @@
     <!--Save icon-->
     <item
         android:id="@+id/action_save_note"
-        android:icon="@drawable/ic_save_black_48dp"
+        android:icon="@drawable/icon_save"
         android:orderInCategory="101"
         android:title="@string/save"
         app:showAsAction="always" />
@@ -14,7 +14,7 @@
     <!--Delete icon-->
     <item
         android:id="@+id/action_delete_note"
-        android:icon="@drawable/ic_delete_black_48dp"
+        android:icon="@drawable/icon_delete"
         android:orderInCategory="100"
         android:title="@string/save"
         android:visible="false"

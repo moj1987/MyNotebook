@@ -52,7 +52,7 @@ public class DatabaseTest {
     public void compareStrings() {
         mDAO.insertAllVocab(SampleVocab.INSTANCE.getAllVocab());
         String original = SampleVocab.INSTANCE.getVocab1();
-        String fromDB = mDAO.getVocabByID(1).getVocab().toString();
+        String fromDB = mDAO.getVocabByID(1).getVocab();
         assertEquals(original, fromDB);
     }
 }

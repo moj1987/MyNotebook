@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:text="Vocabulary"
         android:textSize="22dp"
         android:textStyle="bold"/>
 
@@ -27,6 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="2"
+        android:maxLines="1"
+        android:text="Definition"
         android:textSize="18dp"
         android:textStyle="italic"/>
 
@@ -34,6 +37,8 @@
         android:id="@+id/item_example"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="Example"
         android:layout_weight="2" />
     </LinearLayout>
 

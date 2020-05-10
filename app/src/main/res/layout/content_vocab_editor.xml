@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:hint="Your definition"
-            android:inputType="text" />
+
+            android:inputType="textMultiLine" />
 
         <EditText
             android:id="@+id/edit_example"
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:hint="Your example"
-            android:inputType="text" />
+            android:inputType="textMultiLine" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 

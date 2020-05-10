@@ -3,14 +3,13 @@ package com.mynotebook.englishonthego;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,16 +31,18 @@ public class NoteEditorActivity extends AppCompatActivity implements TextWatcher
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_editor);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         noteTitle = findViewById(R.id.note_title);
         noteText = findViewById(R.id.note_text);
         editTextList = new EditText[]{noteTitle, noteText};
 
         noteTitle.addTextChangedListener(this);
-        noteText.addTextChangedListener(this);
+//        noteText.addTextChangedListener(this);
 
         if (savedInstanceState != null) {
             isEditing = savedInstanceState.getBoolean(EDITING_KEY);
@@ -78,6 +79,7 @@ public class NoteEditorActivity extends AppCompatActivity implements TextWatcher
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -101,6 +103,9 @@ public class NoteEditorActivity extends AppCompatActivity implements TextWatcher
                 deleteNote();
                 finish();
                 break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

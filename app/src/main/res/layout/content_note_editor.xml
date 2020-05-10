@@ -20,14 +20,16 @@
             android:layout_margin="@dimen/text_margin"
             android:hint="Title"
             android:textStyle="bold"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:inputType="text"/>
 
         <EditText
             android:id="@+id/note_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="@dimen/text_margin"
             android:hint="Write here!"
+            android:inputType="textMultiLine"
             android:textAllCaps="false" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
