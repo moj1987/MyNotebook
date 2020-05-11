@@ -17,6 +17,9 @@ public interface LyricDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertLyric(LyricSaveModel lyricSaveModel);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAllLyrics(List<LyricSaveModel> allSampleLyrics);
+
     @Delete
     void deleteLyric(LyricSaveModel lyricSaveModel);
 

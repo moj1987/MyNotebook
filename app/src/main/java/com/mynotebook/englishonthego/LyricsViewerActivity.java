@@ -43,7 +43,7 @@ public class LyricsViewerActivity extends AppCompatActivity {
     private int albumId;
     private int trackId;
     private String albumCoverUrl;
-    private boolean fromDB;
+    private boolean isFromDB;
 
     private LyricViewerViewModel lyricViewerViewModel;
     private HappiApi happiApi;
@@ -86,8 +86,6 @@ public class LyricsViewerActivity extends AppCompatActivity {
 
     private void initViewModel() {
         lyricViewerViewModel = new ViewModelProvider(this).get(LyricViewerViewModel.class);
-
-
     }
 
     private void getLyric() {
@@ -136,13 +134,14 @@ public class LyricsViewerActivity extends AppCompatActivity {
                         "Lyric added to your library.",
                         Snackbar.LENGTH_LONG)
                         .show();
+                isFromDB= true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void saveLyric() {
-        lyricViewerViewModel.saveLyric(lyricData.getId(),
+        lyricViewerViewModel.saveLyric(trackId,
                 lyricData.getTrack(),
                 lyricData.getArtist(),
                 lyricData.getAlbum(),

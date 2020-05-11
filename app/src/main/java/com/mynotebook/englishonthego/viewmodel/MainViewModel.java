@@ -45,4 +45,8 @@ public class MainViewModel extends AndroidViewModel {
     public void deleteAllNotes() {
         mAppRepository.deleteAllNotes();
     }
+
+    public void addSampleLyrics() {
+        mAppRepository.addSampleLyrics();
+    }
 }

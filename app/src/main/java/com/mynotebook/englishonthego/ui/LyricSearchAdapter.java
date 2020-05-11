@@ -14,13 +14,13 @@ import com.mynotebook.englishonthego.networking.LyricSearchModel;
 
 import java.util.List;
 
-public class LyricAdapter extends RecyclerView.Adapter<LyricAdapter.LyricSearchViewHolder> {
+public class LyricSearchAdapter extends RecyclerView.Adapter<LyricSearchAdapter.LyricSearchViewHolder> {
 
     private List<LyricSearchModel> items;
     private final Context context;
     private OnItemClickListener mOnItemClickListener;
 
-    public LyricAdapter(List<LyricSearchModel> items, Context context, OnItemClickListener mOnItemClickListener) {
+    public LyricSearchAdapter(List<LyricSearchModel> items, Context context, OnItemClickListener mOnItemClickListener) {
         this.items = items;
         this.context = context;
         this.mOnItemClickListener = mOnItemClickListener;
@@ -30,7 +30,7 @@ public class LyricAdapter extends RecyclerView.Adapter<LyricAdapter.LyricSearchV
     @Override
     public LyricSearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_lyric_search, parent, false);
+        View view = inflater.inflate(R.layout.item_lyric, parent, false);
         return new LyricSearchViewHolder(view, mOnItemClickListener);
     }
 
@@ -40,7 +40,6 @@ public class LyricAdapter extends RecyclerView.Adapter<LyricAdapter.LyricSearchV
         holder.trackName.setText(lyricSearchModel.getTrackName());
         holder.artist.setText(lyricSearchModel.getArtistName());
         holder.album.setText(lyricSearchModel.getAlbumName());
-
     }
 
     @Override

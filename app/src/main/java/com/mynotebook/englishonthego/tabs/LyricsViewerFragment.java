@@ -15,19 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mynotebook.englishonthego.R;
 import com.mynotebook.englishonthego.model.LyricSaveModel;
-import com.mynotebook.englishonthego.ui.LyricAdapter;
+import com.mynotebook.englishonthego.ui.LyricViewAdapter;
+import com.mynotebook.englishonthego.utilities.SampleLyric;
 import com.mynotebook.englishonthego.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LyricsViewerFragment extends Fragment {
+public class LyricsViewerFragment extends Fragment implements LyricViewAdapter.OnItemClickListener {
 
-    RecyclerView recyclerView;
-    //    private LyricViewerAdapter lyricViewerAdapter;
-    private LyricAdapter lyricAdapter;
     private List<LyricSaveModel> lyricData = new ArrayList<>();
+    private LyricViewAdapter lyricViewAdapter;
     private MainViewModel mainViewModel;
+    private RecyclerView recyclerView;
 
 
     public LyricsViewerFragment() {
@@ -41,16 +41,23 @@ public class LyricsViewerFragment extends Fragment {
         recyclerView = view.findViewById(R.id.lyric_viewer_fragment_recyclerview);
 
         configureAdapters();
+
         initViewModel();
 
-//        return super.onCreateView(inflater, container, savedInstanceState);
+        addSampleData();
+
         return view;
+    }
+
+    private void addSampleData() {
+        mainViewModel.addSampleLyrics();
     }
 
     private void configureAdapters() {
         recyclerView.hasFixedSize();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(lyricViewAdapter);
     }
 
     private void initViewModel() {
@@ -59,15 +66,21 @@ public class LyricsViewerFragment extends Fragment {
                     lyricData.clear();
                     lyricData.addAll(lyricSaveModel);
 
-                    if (lyricAdapter == null) {
-                        lyricAdapter = new LyricAdapter(lyricData, getActivity(), this);
-                        recyclerView.setAdapter(lyricAdapter);
+                    if (lyricViewAdapter == null) {
+                        lyricViewAdapter = new LyricViewAdapter(lyricData, getActivity(), this);
+                        recyclerView.setAdapter(lyricViewAdapter);
                     } else {
-                        lyricAdapter.notifyDataSetChanged();
+                        lyricViewAdapter.notifyDataSetChanged();
                     }
                 };
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.mLiveLyrics.observe(getViewLifecycleOwner(), lyricObserver);
+    }
+
+
+    @Override
+    public void onItemClicked(int position) {
+
     }
 }

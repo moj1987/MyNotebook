@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.mynotebook.englishonthego.model.LyricSaveModel;
 import com.mynotebook.englishonthego.model.NoteModel;
 import com.mynotebook.englishonthego.model.VocabModel;
+import com.mynotebook.englishonthego.utilities.SampleLyric;
 import com.mynotebook.englishonthego.utilities.SampleNote;
 import com.mynotebook.englishonthego.utilities.SampleVocab;
 
@@ -106,5 +107,9 @@ public class AppRepository {
 
     public void insertLyric(LyricSaveModel lyricSaveModel) {
         executor.execute(() -> mDb.lyricDAO().insertLyric(lyricSaveModel));
+    }
+
+    public void addSampleLyrics() {
+        executor.execute(() -> mDb.lyricDAO().insertAllLyrics(SampleLyric.INSTANCE.getAllLyric()));
     }
 }

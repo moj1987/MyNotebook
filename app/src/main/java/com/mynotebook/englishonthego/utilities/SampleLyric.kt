@@ -20,9 +20,9 @@ object SampleLyric {
 
     fun getAllLyric(): List<LyricSaveModel> {
         val list = arrayListOf<LyricSaveModel>()
-        list.add(LyricSaveModel(vocab1, definition1, example1, vocab2, definition2))
-        list.add(LyricSaveModel(vocab2, definition2, example2, vocab3, definition3))
-        list.add(LyricSaveModel(vocab3, definition3, example3, vocab1, definition1))
+        list.add(LyricSaveModel(1, vocab1, definition1, example1, vocab2, definition2))
+        list.add(LyricSaveModel(2, vocab2, definition2, example2, vocab3, definition3))
+        list.add(LyricSaveModel(3, vocab3, definition3, example3, vocab1, definition1))
         return list
     }
 }

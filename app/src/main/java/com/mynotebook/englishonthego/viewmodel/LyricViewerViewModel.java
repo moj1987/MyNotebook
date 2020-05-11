@@ -35,7 +35,7 @@ public class LyricViewerViewModel extends AndroidViewModel {
 
     public void saveLyric(int id, String trackName, String artistName, String albumName, String albumCoverUrl, String lyric) {
         LyricSaveModel lyricSaveModel = mLiveLyric.getValue();
-        if (lyricSaveModel != null) {
+        if (lyricSaveModel == null) {
             lyricSaveModel = new LyricSaveModel(id, trackName, artistName, albumName, albumCoverUrl, lyric);
             mAppRepository.insertLyric(lyricSaveModel);
         }
