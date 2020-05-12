@@ -1,7 +1,6 @@
 package com.mynotebook.englishonthego;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,8 +34,7 @@ import static com.mynotebook.englishonthego.utilities.Constants.KEY_LYRIC_IS_FRO
 
 public class LyricsViewerActivity extends AppCompatActivity {
 
-    //    private static final String TAG = LyricsViewerActivity.class.getSimpleName();
-    private static final String TAG = "testtttttttttttttttt";
+    private static final String TAG = LyricsViewerActivity.class.getSimpleName();
 
     public static final String KEY_ARTIST_ID = "com.mynotebook.englishonthego.LyricsViewerActivity.KEY_ARTIST_ID";
     public static final String KEY_ALBUM_ID = "com.mynotebook.englishonthego.LyricsViewerActivity.KEY_ALBUM_ID";
@@ -93,8 +91,6 @@ public class LyricsViewerActivity extends AppCompatActivity {
             id = extras.getInt(LyricsViewerActivity.KEY_TRACK_ID);
         }
 
-        Log.i(TAG, "Lyric ID : " + id);
-
         lyricViewerViewModel.loadLyric(id);
 
         lyricViewerViewModel.mLiveLyric.observe(this, lyricSaveModel -> {
@@ -116,14 +112,10 @@ public class LyricsViewerActivity extends AppCompatActivity {
                 getLyric();
             }
         });
-
-
     }
 
     private void initViewModel() {
         lyricViewerViewModel = new ViewModelProvider(this).get(LyricViewerViewModel.class);
-
-
     }
 
     private void getLyric() {
@@ -162,7 +154,6 @@ public class LyricsViewerActivity extends AppCompatActivity {
 
             MenuItem deleteItem = menu.findItem(R.id.action_delete_lyric);
             deleteItem.setVisible(true);
-        } else {
         }
         return super.onCreateOptionsMenu(menu);
     }
