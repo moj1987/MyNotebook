@@ -24,12 +24,9 @@ public class LyricViewerViewModel extends AndroidViewModel {
     }
 
     public void loadLyric(int lyricID) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                LyricSaveModel lyricSaveModel = mAppRepository.getLyricByID(lyricID);
-                mLiveLyric.postValue(lyricSaveModel);
-            }
+        executor.execute(() -> {
+            LyricSaveModel lyricSaveModel = mAppRepository.getLyricByID(lyricID);
+            mLiveLyric.postValue(lyricSaveModel);
         });
     }
 
@@ -39,6 +36,11 @@ public class LyricViewerViewModel extends AndroidViewModel {
             lyricSaveModel = new LyricSaveModel(id, trackName, artistName, albumName, albumCoverUrl, lyric);
             mAppRepository.insertLyric(lyricSaveModel);
         }
-
     }
+
+    public void deleteLyric() {
+        mAppRepository.deleteLyric(mLiveLyric.getValue());
+    }
+
+
 }

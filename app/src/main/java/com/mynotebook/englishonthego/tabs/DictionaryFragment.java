@@ -22,7 +22,7 @@ import com.mynotebook.englishonthego.viewmodel.MainViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mynotebook.englishonthego.utilities.Constants.VOCAB_ID_KEY;
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_VOCAB_ID;
 
 public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocabClickListener {
 
@@ -108,7 +108,7 @@ public class DictionaryFragment extends Fragment implements VocabAdapter.OnVocab
          */
         Intent intent = new Intent(getActivity(), VocabEditorActivity.class);
         VocabModel currentVocab = vocabData.get(position);
-        intent.putExtra(VOCAB_ID_KEY, currentVocab.getId());
+        intent.putExtra(KEY_VOCAB_ID, currentVocab.getId());
         startActivity(intent);
     }
 

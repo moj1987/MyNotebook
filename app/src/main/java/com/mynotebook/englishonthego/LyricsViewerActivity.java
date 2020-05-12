@@ -1,6 +1,7 @@
 package com.mynotebook.englishonthego;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,10 +18,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
+import com.mynotebook.englishonthego.model.LyricSaveModel;
 import com.mynotebook.englishonthego.networking.HappiApi;
 import com.mynotebook.englishonthego.networking.Lyric;
 import com.mynotebook.englishonthego.networking.LyricFeed;
 import com.mynotebook.englishonthego.networking.RetrofitManager;
+import com.mynotebook.englishonthego.utilities.Constants;
 import com.mynotebook.englishonthego.viewmodel.LyricViewerViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -28,9 +31,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_LYRIC_IS_FROM_DB;
+
 public class LyricsViewerActivity extends AppCompatActivity {
 
-    private static final String TAG = LyricsViewerActivity.class.getSimpleName();
+    //    private static final String TAG = LyricsViewerActivity.class.getSimpleName();
+    private static final String TAG = "testtttttttttttttttt";
 
     public static final String KEY_ARTIST_ID = "com.mynotebook.englishonthego.LyricsViewerActivity.KEY_ARTIST_ID";
     public static final String KEY_ALBUM_ID = "com.mynotebook.englishonthego.LyricsViewerActivity.KEY_ALBUM_ID";
@@ -48,7 +54,8 @@ public class LyricsViewerActivity extends AppCompatActivity {
     private LyricViewerViewModel lyricViewerViewModel;
     private HappiApi happiApi;
     private RetrofitManager retrofitManager;
-    private Lyric lyricData;
+    private Lyric lyricFeedData;
+    private LyricSaveModel savedLyricData;
 
     private TextView textViewLyric;
     private CollapsingToolbarLayout toolbarLayout;
@@ -70,22 +77,53 @@ public class LyricsViewerActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        artistId = getIntent().getIntExtra(KEY_ARTIST_ID, -1);
-        albumId = getIntent().getIntExtra(KEY_ALBUM_ID, -1);
-        trackId = getIntent().getIntExtra(KEY_TRACK_ID, -1);
-        albumCoverUrl = getIntent().getStringExtra(KEY_ALBUM_COVER_URL);
-
-        toolbarLayout.setTitle(getIntent().getStringExtra(KEY_TRACK_NAME));
-        Picasso.get().load(albumCoverUrl).fit().into(imageView);
 
         retrofitManager = new RetrofitManager();
         happiApi = retrofitManager.getHappiApi();
         initViewModel();
-        getLyric();
+
+        loadLyric();
+    }
+
+    private void loadLyric() {
+        Bundle extras = getIntent().getExtras();
+        isFromDB = extras.getBoolean(KEY_LYRIC_IS_FROM_DB);
+        int id = extras.getInt(Constants.KEY_TRACK_ID);
+        if (id == 0) {
+            id = extras.getInt(LyricsViewerActivity.KEY_TRACK_ID);
+        }
+
+        Log.i(TAG, "Lyric ID : " + id);
+
+        lyricViewerViewModel.loadLyric(id);
+
+        lyricViewerViewModel.mLiveLyric.observe(this, lyricSaveModel -> {
+            if (lyricSaveModel != null) {
+                isFromDB = true;
+                intermittentProgressBar.setVisibility(View.INVISIBLE);
+                toolbarLayout.setTitle(lyricSaveModel.getTrackName());
+                textViewLyric.setText(lyricSaveModel.getLyric());
+                Picasso.get().load(lyricSaveModel.getAlbumCoverUrl()).fit().into(imageView);
+            } else {
+                artistId = extras.getInt(KEY_ARTIST_ID);
+                albumId = extras.getInt(KEY_ALBUM_ID);
+                trackId = extras.getInt(KEY_TRACK_ID);
+                albumCoverUrl = extras.getString(KEY_ALBUM_COVER_URL);
+
+                toolbarLayout.setTitle(extras.getString(KEY_TRACK_NAME));
+                Picasso.get().load(albumCoverUrl).fit().into(imageView);
+
+                getLyric();
+            }
+        });
+
+
     }
 
     private void initViewModel() {
         lyricViewerViewModel = new ViewModelProvider(this).get(LyricViewerViewModel.class);
+
+
     }
 
     private void getLyric() {
@@ -101,10 +139,10 @@ public class LyricsViewerActivity extends AppCompatActivity {
                     return;
                 }
                 LyricFeed lyricFeed = response.body();
-                lyricData = lyricFeed.getLyricResult();
+                lyricFeedData = lyricFeed.getLyricResult();
                 intermittentProgressBar.setVisibility(View.INVISIBLE);
                 textViewLyric.setVisibility(View.VISIBLE);
-                textViewLyric.setText(lyricData.getLyrics());
+                textViewLyric.setText(lyricFeedData.getLyrics());
             }
 
             @Override
@@ -118,6 +156,14 @@ public class LyricsViewerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_lyrics_viewer, menu);
+        if (isFromDB) {
+            MenuItem saveItem = menu.findItem(R.id.action_save_lyric);
+            saveItem.setVisible(false);
+
+            MenuItem deleteItem = menu.findItem(R.id.action_delete_lyric);
+            deleteItem.setVisible(true);
+        } else {
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -134,18 +180,27 @@ public class LyricsViewerActivity extends AppCompatActivity {
                         "Lyric added to your library.",
                         Snackbar.LENGTH_LONG)
                         .show();
-                isFromDB= true;
+                isFromDB = true;
+                break;
+            case R.id.action_delete_lyric:
+                deleteLyric();
+                finish();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void deleteLyric() {
+        lyricViewerViewModel.deleteLyric();
+    }
+
     private void saveLyric() {
         lyricViewerViewModel.saveLyric(trackId,
-                lyricData.getTrack(),
-                lyricData.getArtist(),
-                lyricData.getAlbum(),
+                lyricFeedData.getTrack(),
+                lyricFeedData.getArtist(),
+                lyricFeedData.getAlbum(),
                 albumCoverUrl,
-                lyricData.getLyrics());
+                lyricFeedData.getLyrics());
     }
 }

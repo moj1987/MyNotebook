@@ -112,4 +112,8 @@ public class AppRepository {
     public void addSampleLyrics() {
         executor.execute(() -> mDb.lyricDAO().insertAllLyrics(SampleLyric.INSTANCE.getAllLyric()));
     }
+
+    public void deleteLyric(LyricSaveModel lyric) {
+        executor.execute(() -> mDb.lyricDAO().deleteLyric(lyric));
+    }
 }

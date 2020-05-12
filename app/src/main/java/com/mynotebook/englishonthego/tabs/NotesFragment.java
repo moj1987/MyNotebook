@@ -22,7 +22,7 @@ import com.mynotebook.englishonthego.viewmodel.MainViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mynotebook.englishonthego.utilities.Constants.NOTE_ID_KEY;
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_NOTE_ID;
 
 public class NotesFragment extends Fragment implements NotesAdapter.OnNoteClickListener {
     private static final String TAG = "Notes Fragment";
@@ -112,7 +112,7 @@ public class NotesFragment extends Fragment implements NotesAdapter.OnNoteClickL
          */
         Intent intent = new Intent(getActivity(), NoteEditorActivity.class);
         NoteModel currentNote = noteData.get(position);
-        intent.putExtra(NOTE_ID_KEY, currentNote.getId());
+        intent.putExtra(KEY_NOTE_ID, currentNote.getId());
         startActivity(intent);
     }
 }

@@ -6,7 +6,6 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -17,8 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.mynotebook.englishonthego.viewmodel.VocabEditorViewModel;
 
-import static com.mynotebook.englishonthego.utilities.Constants.EDITING_KEY;
-import static com.mynotebook.englishonthego.utilities.Constants.VOCAB_ID_KEY;
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_EDITING;
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_VOCAB_ID;
 
 public class VocabEditorActivity extends AppCompatActivity implements TextWatcher {
 
@@ -53,7 +52,7 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
          * Check if it is editing. Not let live data object publish it.
          */
         if (savedInstanceState != null) {
-            isEditing = savedInstanceState.getBoolean(EDITING_KEY);
+            isEditing = savedInstanceState.getBoolean(KEY_EDITING);
         }
 
         initViewModel();
@@ -82,7 +81,7 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
             isNewVocab = true;
         } else {
             setTitle("Editing");
-            mViewModel.loadVocab(extras.getInt(VOCAB_ID_KEY));
+            mViewModel.loadVocab(extras.getInt(KEY_VOCAB_ID));
         }
     }
 
@@ -164,7 +163,7 @@ public class VocabEditorActivity extends AppCompatActivity implements TextWatche
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(EDITING_KEY, true);
+        outState.putBoolean(KEY_EDITING, true);
         super.onSaveInstanceState(outState);
     }
 }

@@ -1,5 +1,6 @@
 package com.mynotebook.englishonthego.tabs;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +14,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mynotebook.englishonthego.LyricsViewerActivity;
 import com.mynotebook.englishonthego.R;
 import com.mynotebook.englishonthego.model.LyricSaveModel;
 import com.mynotebook.englishonthego.ui.LyricViewAdapter;
-import com.mynotebook.englishonthego.utilities.SampleLyric;
 import com.mynotebook.englishonthego.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_TRACK_ID;
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_LYRIC_IS_FROM_DB;
 
 public class LyricsViewerFragment extends Fragment implements LyricViewAdapter.OnItemClickListener {
 
@@ -44,13 +48,7 @@ public class LyricsViewerFragment extends Fragment implements LyricViewAdapter.O
 
         initViewModel();
 
-        addSampleData();
-
         return view;
-    }
-
-    private void addSampleData() {
-        mainViewModel.addSampleLyrics();
     }
 
     private void configureAdapters() {
@@ -81,6 +79,14 @@ public class LyricsViewerFragment extends Fragment implements LyricViewAdapter.O
 
     @Override
     public void onItemClicked(int position) {
+        Intent intent = new Intent(getActivity(), LyricsViewerActivity.class);
+        LyricSaveModel currentLyric = lyricData.get(position);
+        intent.putExtra(KEY_TRACK_ID, currentLyric.getId());
+        intent.putExtra(KEY_LYRIC_IS_FROM_DB, true);
+        startActivity(intent);
+    }
 
+    private void addSampleData() {
+        mainViewModel.addSampleLyrics();
     }
 }

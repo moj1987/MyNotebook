@@ -16,8 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.mynotebook.englishonthego.viewmodel.NoteEditorViewModel;
 
-import static com.mynotebook.englishonthego.utilities.Constants.EDITING_KEY;
-import static com.mynotebook.englishonthego.utilities.Constants.NOTE_ID_KEY;
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_EDITING;
+import static com.mynotebook.englishonthego.utilities.Constants.KEY_NOTE_ID;
 
 public class NoteEditorActivity extends AppCompatActivity implements TextWatcher {
     private static final String TAG = "NoteEditorActivity";
@@ -45,7 +45,7 @@ public class NoteEditorActivity extends AppCompatActivity implements TextWatcher
 //        noteText.addTextChangedListener(this);
 
         if (savedInstanceState != null) {
-            isEditing = savedInstanceState.getBoolean(EDITING_KEY);
+            isEditing = savedInstanceState.getBoolean(KEY_EDITING);
         }
 
         initViewModel();
@@ -74,7 +74,7 @@ public class NoteEditorActivity extends AppCompatActivity implements TextWatcher
             setTitle("New note");
         } else {
             setTitle("Editing");
-            mViewModel.loadNote(extras.getInt(NOTE_ID_KEY));
+            mViewModel.loadNote(extras.getInt(KEY_NOTE_ID));
         }
 
     }
@@ -146,7 +146,7 @@ public class NoteEditorActivity extends AppCompatActivity implements TextWatcher
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(EDITING_KEY, true);
+        outState.putBoolean(KEY_EDITING, true);
         super.onSaveInstanceState(outState);
     }
 }
