@@ -35,6 +35,7 @@ public class LyricViewerViewModel extends AndroidViewModel {
         if (lyricSaveModel == null) {
             lyricSaveModel = new LyricSaveModel(id, trackName, artistName, albumName, albumCoverUrl, lyric);
             mAppRepository.insertLyric(lyricSaveModel);
+            mLiveLyric.postValue(lyricSaveModel);
         }
     }
 

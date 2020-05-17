@@ -3,14 +3,12 @@ package com.mynotebook.englishonthego.tabs;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.mynotebook.englishonthego.LyricsViewerActivity;
@@ -40,7 +44,7 @@ import retrofit2.Response;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter.OnItemClickListener {
+public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter.OnItemClickListener, TextWatcher {
     public static final String KEY_STATE = "com.mynotebook.englishonthego.MainActivity.KEY_STATE";
 
     private String searchText;
@@ -73,6 +77,8 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
         indeterminateProgressBar = view.findViewById(R.id.indeterminateProgressBar);
         recyclerView = view.findViewById(R.id.lyrics_recycler_view);
 
+        searchTextInput.addTextChangedListener(this);
+
         configureAdapters();
         configureListeners();
 
@@ -81,7 +87,6 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
 
     private void configureAdapters() {
         recyclerView.setHasFixedSize(true);
-//        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -155,7 +160,7 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
                 if (responseData.isEmpty()) {
                     Snackbar.make(
                             getActivity().findViewById(R.id.coordinator),
-                            "Sorry, nothing found",
+                            "Sorry, nothing found.",
                             Snackbar.LENGTH_LONG)
                             .show();
                 }
@@ -201,13 +206,37 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
         String trackName = currentLyricData.getTrackName();
         String albumCoverUrl = currentLyricData.getAlbumCoverUrl();
 
-        Intent intent = new Intent(getContext(), LyricsViewerActivity.class);
-        intent.putExtra(LyricsViewerActivity.KEY_TRACK_ID, trackId);
-        intent.putExtra(LyricsViewerActivity.KEY_ARTIST_ID, artistId);
-        intent.putExtra(LyricsViewerActivity.KEY_ALBUM_ID, albumId);
-        intent.putExtra(LyricsViewerActivity.KEY_TRACK_NAME, trackName);
-        intent.putExtra(LyricsViewerActivity.KEY_ALBUM_COVER_URL, albumCoverUrl);
+        LyricsViewerActivity.startActivity(artistId, albumId, trackId, trackName, albumCoverUrl, false, getContext());
+    }
 
-        startActivity(intent);
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+        } else {
+            ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+            if (!isConnected) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Error")
+                        .setMessage("No network detected. Please connect to a network.")
+                        .setNegativeButton("Dismiss", ((dialog, which) -> dialog.dismiss()))
+                        .create()
+                        .show();
+
+            }
+
+        }
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }

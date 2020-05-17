@@ -1,6 +1,5 @@
 package com.mynotebook.englishonthego.tabs;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,6 @@ import com.mynotebook.englishonthego.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.mynotebook.englishonthego.utilities.Constants.KEY_TRACK_ID;
-import static com.mynotebook.englishonthego.utilities.Constants.KEY_LYRIC_IS_FROM_DB;
 
 public class LyricsViewerFragment extends Fragment implements LyricViewAdapter.OnItemClickListener {
 
@@ -79,11 +75,8 @@ public class LyricsViewerFragment extends Fragment implements LyricViewAdapter.O
 
     @Override
     public void onItemClicked(int position) {
-        Intent intent = new Intent(getActivity(), LyricsViewerActivity.class);
-        LyricSaveModel currentLyric = lyricData.get(position);
-        intent.putExtra(KEY_TRACK_ID, currentLyric.getId());
-        intent.putExtra(KEY_LYRIC_IS_FROM_DB, true);
-        startActivity(intent);
+        int trackId = lyricData.get(position).getId();
+        LyricsViewerActivity.startActivity(trackId, true, true, getContext());
     }
 
     private void addSampleData() {

@@ -14,7 +14,7 @@ import com.mynotebook.englishonthego.model.VocabModel;
 
 import java.util.List;
 
-public class VocabAdapter extends RecyclerView.Adapter<VocabAdapter.VocabViewHolder> {
+public class VocabAdapter extends RecyclerView.Adapter<VocabAdapter.ExpandedVocabViewHolder> {
     private static final String TAG = "Vocab Adapter";
     private List<VocabModel> vocabItems;
     private Context context;
@@ -28,14 +28,14 @@ public class VocabAdapter extends RecyclerView.Adapter<VocabAdapter.VocabViewHol
 
     @NonNull
     @Override
-    public VocabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ExpandedVocabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_vocab, parent, false);
-        return new VocabViewHolder(view, onVocabClickListener);
+                .inflate(viewType, parent, false);
+        return new ExpandedVocabViewHolder(view, onVocabClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VocabViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ExpandedVocabViewHolder holder, int position) {
         VocabModel currentVocab = vocabItems.get(position);
 
         holder.vocab.setText(currentVocab.getVocab());
@@ -48,12 +48,17 @@ public class VocabAdapter extends RecyclerView.Adapter<VocabAdapter.VocabViewHol
         return vocabItems.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
 
-    public class VocabViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        return R.layout.item_vocab;
+    }
+
+    public class ExpandedVocabViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView vocab, definition, example;
         OnVocabClickListener onVocabClickListener;
 
-        public VocabViewHolder(@NonNull View itemView, OnVocabClickListener onVocabClickListener) {
+        public ExpandedVocabViewHolder(@NonNull View itemView, OnVocabClickListener onVocabClickListener) {
             super(itemView);
             vocab = itemView.findViewById(R.id.item_vocab);
             definition = itemView.findViewById(R.id.item_definition);
