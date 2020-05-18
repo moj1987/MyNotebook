@@ -44,7 +44,7 @@ import retrofit2.Response;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter.OnItemClickListener, TextWatcher {
+public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter.OnItemClickListener {
     public static final String KEY_STATE = "com.mynotebook.englishonthego.MainActivity.KEY_STATE";
 
     private String searchText;
@@ -75,8 +75,6 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
         searchButton = view.findViewById(R.id.search_button);
         indeterminateProgressBar = view.findViewById(R.id.indeterminateProgressBar);
         recyclerView = view.findViewById(R.id.lyrics_recycler_view);
-
-        searchTextInput.addTextChangedListener(this);
 
         configureAdapters();
         configureListeners();
@@ -208,18 +206,5 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
         LyricsViewerActivity.startActivity(artistId, albumId, trackId, trackName, albumCoverUrl, false, getContext());
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
 }
