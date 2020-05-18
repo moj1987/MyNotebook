@@ -54,7 +54,6 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
 
     private HappiApi happiApi;
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private LyricSearchAdapter mAdapter;
     private List<LyricSearchModel> responseData = new ArrayList<>();
     private RetrofitManager retrofitManager;
@@ -88,8 +87,7 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
     private void configureAdapters() {
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new LyricSearchAdapter(responseData, getActivity(), this);
         recyclerView.setAdapter(mAdapter);
@@ -151,8 +149,19 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
                     searchButton.setVisibility(View.VISIBLE);
                     return;
                 }
+
                 SearchFeed feeds = feed.body();
                 responseData = feeds.getCallResult();
+
+                /**
+                 * Remove the items that do not have lyric
+                 */
+                for (Iterator<LyricSearchModel> iterator = responseData.iterator(); iterator.hasNext(); ) {
+                    LyricSearchModel currentData = iterator.next();
+                    if (!currentData.getHasLyric()) {
+                        iterator.remove();
+                    }
+                }
 
                 /**
                  * Check if the response data is empty
@@ -163,16 +172,6 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
                             "Sorry, nothing found.",
                             Snackbar.LENGTH_LONG)
                             .show();
-                }
-
-                /**
-                 * Remove the items that do not have lyric
-                 */
-                for (Iterator<LyricSearchModel> iterator = responseData.iterator(); iterator.hasNext(); ) {
-                    LyricSearchModel currentData = iterator.next();
-                    if (!currentData.getHasLyric()) {
-                        iterator.remove();
-                    }
                 }
 
                 indeterminateProgressBar.setVisibility(View.INVISIBLE);
@@ -211,23 +210,7 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-        } else {
-            ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-            if (!isConnected) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Error")
-                        .setMessage("No network detected. Please connect to a network.")
-                        .setNegativeButton("Dismiss", ((dialog, which) -> dialog.dismiss()))
-                        .create()
-                        .show();
-
-            }
-
-        }
     }
 
     @Override
