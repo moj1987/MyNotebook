@@ -114,7 +114,7 @@ public class LyricsViewerActivity extends AppCompatActivity {
         textViewLyric = findViewById(R.id.lyric_text_view);
         toolbarLayout = findViewById(R.id.toolbar_layout);
         imageView = findViewById(R.id.toolbar_img_album);
-        intermittentProgressBar = findViewById(R.id.indeterminateProgressBar);
+        intermittentProgressBar = findViewById(R.id.indeterminate_progress_bar);
 
         setSupportActionBar(toolbar);
 

@@ -1,14 +1,11 @@
 package com.mynotebook.englishonthego.tabs;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Build;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -28,11 +26,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mynotebook.englishonthego.LyricsViewerActivity;
 import com.mynotebook.englishonthego.R;
+import com.mynotebook.englishonthego.networking.ConnectionManager;
 import com.mynotebook.englishonthego.networking.HappiApi;
 import com.mynotebook.englishonthego.networking.LyricSearchModel;
 import com.mynotebook.englishonthego.networking.RetrofitManager;
 import com.mynotebook.englishonthego.networking.SearchFeed;
 import com.mynotebook.englishonthego.ui.LyricSearchAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,11 +53,22 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
     private ImageView searchButton;
     private ProgressBar indeterminateProgressBar;
 
+    private ImageView imageNoInternet;
+    private LinearLayout linearLayout;
+
     private HappiApi happiApi;
     private RecyclerView recyclerView;
     private LyricSearchAdapter mAdapter;
     private List<LyricSearchModel> responseData = new ArrayList<>();
     private RetrofitManager retrofitManager;
+
+    private BroadcastReceiver networkBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean hasInternet = ConnectionManager.isNetworkAvailable(getContext());
+            updateUi(hasInternet);
+        }
+    };
 
     public LyricsSearchFragment() {
         // Required empty public constructor
@@ -69,12 +81,15 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
         happiApi = retrofitManager.getHappiApi();
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_lyrics, container, false);
+        View view = inflater.inflate(R.layout.fragment_lyric_search, container, false);
 
         searchTextInput = view.findViewById(R.id.search_text);
         searchButton = view.findViewById(R.id.search_button);
-        indeterminateProgressBar = view.findViewById(R.id.indeterminateProgressBar);
+        indeterminateProgressBar = view.findViewById(R.id.indeterminate_progress_bar);
         recyclerView = view.findViewById(R.id.lyrics_recycler_view);
+
+        imageNoInternet = view.findViewById(R.id.image_no_internet);
+        linearLayout = view.findViewById(R.id.linear_layout_lyric_search);
 
         configureAdapters();
         configureListeners();
@@ -94,6 +109,20 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        getActivity().registerReceiver(networkBroadcastReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(networkBroadcastReceiver);
     }
 
     private void configureListeners() {
@@ -141,7 +170,7 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
 
         call.enqueue(new Callback<SearchFeed>() {
             @Override
-            public void onResponse(Call<SearchFeed> call, Response<SearchFeed> feed) {
+            public void onResponse(@NotNull Call<SearchFeed> call, @NotNull Response<SearchFeed> feed) {
                 if (!feed.isSuccessful()) {
                     indeterminateProgressBar.setVisibility(View.INVISIBLE);
                     searchButton.setVisibility(View.VISIBLE);
@@ -151,7 +180,7 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
                 SearchFeed feeds = feed.body();
                 responseData = feeds.getCallResult();
 
-                /**
+                /*
                  * Remove the items that do not have lyric
                  */
                 for (Iterator<LyricSearchModel> iterator = responseData.iterator(); iterator.hasNext(); ) {
@@ -161,9 +190,6 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
                     }
                 }
 
-                /**
-                 * Check if the response data is empty
-                 */
                 if (responseData.isEmpty()) {
                     Snackbar.make(
                             getActivity().findViewById(R.id.coordinator),
@@ -180,7 +206,7 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
             }
 
             @Override
-            public void onFailure(Call<SearchFeed> call, Throwable t) {
+            public void onFailure(@NotNull Call<SearchFeed> call, @NotNull Throwable t) {
                 Toast.makeText(getContext(), "Network error, please try again later.", LENGTH_LONG).show();
                 indeterminateProgressBar.setVisibility(View.INVISIBLE);
                 searchButton.setVisibility(View.VISIBLE);
@@ -206,5 +232,9 @@ public class LyricsSearchFragment extends Fragment implements LyricSearchAdapter
         LyricsViewerActivity.startActivity(artistId, albumId, trackId, trackName, albumCoverUrl, false, getContext());
     }
 
+    private void updateUi(boolean hasInternet) {
+        linearLayout.setVisibility(hasInternet ? View.VISIBLE : View.INVISIBLE);
+        imageNoInternet.setVisibility(hasInternet ? View.INVISIBLE : View.VISIBLE);
+    }
 
 }

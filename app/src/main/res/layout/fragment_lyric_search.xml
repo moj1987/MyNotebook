@@ -8,6 +8,7 @@
     tools:context=".tabs.LyricsSearchFragment">
 
     <LinearLayout
+        android:id="@+id/linear_layout_lyric_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/single_space"
@@ -33,7 +34,7 @@
                 android:layout_gravity="center">
 
                 <ProgressBar
-                    android:id="@+id/indeterminateProgressBar"
+                    android:id="@+id/indeterminate_progress_bar"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:visibility="invisible"
@@ -49,11 +50,18 @@
 
         </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/lyrics_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lyrics_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_no_internet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/image_no_internet"
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
